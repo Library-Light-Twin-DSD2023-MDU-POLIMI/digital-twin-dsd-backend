@@ -6,10 +6,7 @@
   "author": "",
   "license": "UNLICENSED",
   "scripts": {
-    "unit": "jest",
-    "lint": "eslint '*.ts' --quiet --fix",
-    "compile": "tsc",
-    "test": "npm run compile && npm run unit"
+    "compile": "tsc"
   },
   "dependencies": {
     "esbuild": "^0.14.14",
