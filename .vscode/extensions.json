@@ -1,6 +1,8 @@
 {
     "recommendations": [
         "amazonwebservices.aws-toolkit-vscode",
-        "redhat.vscode-yaml"
+        "redhat.vscode-yaml",
+        "christian-kohler.npm-intellisense",
+        "rvest.vs-code-prettier-eslint"
     ]
 }
