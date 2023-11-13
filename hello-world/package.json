@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "esbuild": "^0.14.14",
-    "digital-twin-api": "../digital-twin-api"
+    "digital-twin-api": "file:/opt/nodejs"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.92",

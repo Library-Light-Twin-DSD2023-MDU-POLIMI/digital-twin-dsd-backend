@@ -3,7 +3,7 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   digital-twin-dsd-backend
 
-  Sample SAM Template for digital-twin-dsd-backend
+  SAM template for the backend of the project
   
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -36,7 +36,7 @@ Resources:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /hello
-            Method: get
+            Method: post
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:

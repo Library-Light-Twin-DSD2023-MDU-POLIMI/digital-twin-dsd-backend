@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { getHello } from "digital-twin-api";
-
+ import { getHello } from "/opt/nodejs/digital-twin-api";
+import { readdirSync} from 'fs';
 /**
  *
  * Event doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-input-format
@@ -13,11 +13,12 @@ import { getHello } from "digital-twin-api";
 
 export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     try {
+        var files = readdirSync(event.body);
         return {
             statusCode: 200,
-            body: JSON.stringify({
-                message: getHello(),
-            }),
+            body: JSON.stringify(files/*+[{
+                message: getHello()
+            }]*/),
         };
     } catch (err) {
         console.log(err);
