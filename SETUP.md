@@ -1,19 +1,39 @@
-# Setup instruction for working on the backend
+# Setup instructions
 
-This guide is intended to make the setup easier if you are using vscode. If you are using anything else as an IDE, there are probably plugins you can search for working with aws, and they probably will be similar
+## Previous installation
 
-1. [Install `nodejs`](): Must be version 18.X (version configured for SAM)
+* [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+* [aws-sam-cli](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html)
+* [VSCode](https://code.visualstudio.com/)
+* [git](https://git-scm.com/downloads)
+* [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+* nodejs
+* typescript
+* docker (needed in order to run the backend locally, for development)
 
-1. [Install `npm`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
-2. [Install `esbuild`](https://esbuild.github.io/getting-started/#install-esbuild): This is used by AWS SAM in order to transpile typescript to javascript code. `esbuild` doesn't check types, so in order to check everything is okay, we need to use `tsc`
 
-3. [Install `aws` CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+## VSCode setup
 
-4. [Install `sam` CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html)
+1. Clone the repo. You need to sign in with github in order to avoid
+   authentication issues.
 
-5. [Install `tsc`](https://www.typescriptlang.org/id/download)
+2. Install the recommended extensions (workspace recommendations)
+   
+   ![Get the ones from the WORKSPACE RECOMMENDATIONS section](.images/image.png)
+3. When you do this the screen for the AWS extension will open. To sign
+   in with the provided credentials, we will go to AWS Explorer, then open
+   "Or add IAM User Credentials" and enter you username in the profile
+   name, and the 2 credentials provided for login.
 
-6. If you don't have it already (and unless you want to use anything else) get vscode and install the recomended extensions (search `@recommended` and look at the Workspace extensions). If you are using another IDE, just search for whatever extensions you feel would be appropriate.
+   ![](.images/image-2.png)
 
-7. You should install `docker` if you want to test the backend locally
+4. You will probably have this on your aws tab. We will be using
+   `eu-north-1` as the region. In order to change it, just right click the
+   region 'US East', and on 'Show or Hide regions'. Then deselect the one
+   you have, and search for `eu-north-1` 'Europe (Stockholm)'.
+
+   ![](.images/image-1.png)
+
+
+5. with that you should be able to see the endpoints in API Gateway, and if you right click on them and use 'Invoke on AWS', you will be able to send custom calls on them for testing. You can also run locally the backend with `sam local invoke`.

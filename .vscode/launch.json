@@ -1,0 +1,29 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        // HACK this is an example we can use when debugging code, or testing or whatever
+        // You can change the parameters here, and then you can debug the program to quickly check if anything's wrong
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
+            "name": "Invoke HelloWorldFunction",
+            "invokeTarget": {
+                "target": "api",
+                "templatePath": "./template.yaml",
+                "logicalId": "HelloWorldFunction"
+            },
+            "api": {
+                "path": "/hello",
+                "httpMethod": "post",
+                "payload": {
+                    "json": {
+                        "body": "/"
+                    }
+                }
+            }
+        }
+    ]
+}

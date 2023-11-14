@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "esbuild": "^0.14.14",
-    "digital-twin-api": "file:/opt/nodejs"
+    "digital-twin-api": "git+https://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:x-oauth-basic@github.com/nezred/digital-twin-api.git#main"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.92",
