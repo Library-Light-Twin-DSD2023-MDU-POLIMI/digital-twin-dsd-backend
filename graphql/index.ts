@@ -1,4 +1,4 @@
-import { ApolloServer } from "apollo-server-lambda";
+import { ApolloServer} from "apollo-server-lambda";
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Handler } from 'aws-lambda';
 import mongoose from "mongoose";
 import resolvers from "./resolvers/resolvers";
@@ -22,8 +22,3 @@ const server = new ApolloServer({
 export const lambdaHandler: Handler<APIGatewayProxyEvent, APIGatewayProxyResult> = server.createHandler();
 
 
-/* const { url } = await startStandaloneServer(server, {
-  listen: { port: 4000 },
-});
-
-console.log(`🚀  Server ready at: ${url}`); */
