@@ -10,7 +10,7 @@
     "compile": "tsc"
   },
   "dependencies": {
-    "digital-twin-api": "git+https://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:x-oauth-basic@github.com/Library-Light-Twin-DSD2023-MDU-POLIMI/digital-twin-api.git#main"
+    "digital-twin-api": "git+https://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:x-oauth-basic@github.com/Library-Light-Twin-DSD2023-MDU-POLIMI/digital-twin-api.git#development"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.92",
