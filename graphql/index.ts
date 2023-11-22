@@ -18,7 +18,14 @@ const server = new ApolloServer({
   introspection: true,
 });
 
-
-export const lambdaHandler: Handler<APIGatewayProxyEvent, APIGatewayProxyResult> = server.createHandler();
+const baseHandler= server.createHandler();
+// HACK i put the mongoose connection here, ideally this should be handled by the digital-twin-api
+export const lambdaHandler: Handler<APIGatewayProxyEvent, APIGatewayProxyResult> = 
+  (event, context, callback) => {
+  if (mongoose.connections.length<1) {
+     mongoose.connect("mongodb+srv:/application:lol@dsd.iaano1k.mongodb.net/");
+  }
+  return baseHandler(event,context,callback);
+}
 
 
