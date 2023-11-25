@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+    "rootDir": "./",
+    "target": "ES6",
+    "outDir": "./bin",
+    "declaration": true,
+    "strict": true,
+    "preserveConstEnums": true,
+    
+    "sourceMap": false,
+    "module": "ES6",
+    "types": ["node"],
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+    }
+}
