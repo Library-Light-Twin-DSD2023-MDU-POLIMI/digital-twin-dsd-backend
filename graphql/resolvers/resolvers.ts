@@ -1,6 +1,10 @@
 import { GraphQLError } from "graphql";
 import mongoose from "mongoose";
-import {LightingAsset, LightingAssetTimeSeriesData, WorkOrder} from "digital-twin-api";
+import {
+  LightingAsset, 
+  LightingAssetTimeSeriesData, 
+  WorkOrder
+} from "../digital-twin-api/index";
 import {
   IAddLightingAssetInput,
   IAddWorkOrderInput,

@@ -2,7 +2,7 @@ import {
   CurrentStatus,
   LightingType,
   PredictiveStatus,
-} from "digital-twin-api";
+} from "../../digital-twin-api/index";
 
 export interface ISortAndPaginate {
   limit: number;
