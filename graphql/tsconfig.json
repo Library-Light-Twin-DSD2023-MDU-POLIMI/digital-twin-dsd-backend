@@ -1,18 +1,19 @@
 {
     "compilerOptions": {
     "rootDir": "./",
-    "target": "ES6",
+    "target": "es5",
     "outDir": "./bin",
     "declaration": true,
     "strict": true,
     "preserveConstEnums": true,
     
     "sourceMap": false,
-    "module": "ES6",
-    "types": ["node"],
+    "module": "commonjs",
+    "types": ["node", "jest"],
     "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
-    }
+    },
+    "exclude": ["node_modules", "**/*.test.ts"]
 }
