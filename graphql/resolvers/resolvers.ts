@@ -218,8 +218,10 @@ const resolvers = {
           });
 
           return await newLightingAsset.save();
-        } catch (error) {
-          throw new GraphQLError("Was not able to add a new lighting asset");
+        } 
+        catch (error) {
+          console.error("Error in addLightingAsset: ", error);
+          throw new GraphQLError(`Was not able to add a new lighting asset`);
         }
       },
 
@@ -237,6 +239,7 @@ const resolvers = {
           );
           return updatedLightingAsset;
         } catch (error) {
+          console.error("Error in updateLightingAsset: ", error);
           throw new GraphQLError("Was not able to update lighting asset");
         }
       },
@@ -246,6 +249,7 @@ const resolvers = {
             .deletedCount;
           return result > 0;
         } catch (error) {
+          console.error("Error in removeLightingAsset: ", error);
           throw new GraphQLError("Was not able to remove lighting asset");
         }
       },

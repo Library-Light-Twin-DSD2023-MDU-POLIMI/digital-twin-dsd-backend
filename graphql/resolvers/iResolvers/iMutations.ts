@@ -22,6 +22,7 @@ export interface IUpdateLightingAssetInput {
   uid: string;
   currentStatus: CurrentStatus;
   predictiveStatus: PredictiveStatus;
+  type: LightingType;
   location: {
     floor: number;
     section: string;
