@@ -3,6 +3,7 @@
         "amazonwebservices.aws-toolkit-vscode",
         "redhat.vscode-yaml",
         "christian-kohler.npm-intellisense",
-        "tamasfe.even-better-toml"
+        "tamasfe.even-better-toml",
+        "graphql.vscode-graphql"
     ]
 }

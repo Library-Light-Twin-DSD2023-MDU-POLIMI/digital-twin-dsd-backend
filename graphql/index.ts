@@ -1,4 +1,4 @@
-import { ApolloServer } from "apollo-server-lambda";
+import { ApolloServer} from "apollo-server-lambda";
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Handler } from 'aws-lambda';
 import mongoose from "mongoose";
 import resolvers from "./resolvers/resolvers";
@@ -18,12 +18,14 @@ const server = new ApolloServer({
   introspection: true,
 });
 
+const baseHandler= server.createHandler();
+// HACK i put the mongoose connection here, ideally this should be handled by the digital-twin-api
+export const lambdaHandler: Handler<APIGatewayProxyEvent, APIGatewayProxyResult> = 
+  (event, context, callback) => {
+  if (mongoose.connections.length<1) {
+     mongoose.connect("mongodb+srv:/application:lol@dsd.iaano1k.mongodb.net/");
+  }
+  return baseHandler(event,context,callback);
+}
 
-export const lambdaHandler: Handler<APIGatewayProxyEvent, APIGatewayProxyResult> = server.createHandler();
 
-
-/* const { url } = await startStandaloneServer(server, {
-  listen: { port: 4000 },
-});
-
-console.log(`🚀  Server ready at: ${url}`); */

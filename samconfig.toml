@@ -16,10 +16,10 @@ lint = true
 [default.deploy.parameters]
 capabilities = "CAPABILITY_IAM"
 confirm_changeset = true
-stack_name = "digital-twin-dsd-2023"
-s3_prefix = "digital-twin-dsd"
-region = "eu-north-1"
+resolve_s3 = false
 s3_bucket = "digital-twin-dsd-2023"
+s3_prefix = "digital-twin-dsd-2023"
+region = "eu-north-1"
 image_repositories = []
 
 [default.package.parameters]

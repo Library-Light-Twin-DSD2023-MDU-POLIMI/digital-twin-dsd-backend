@@ -1,5 +1,5 @@
 {
-  "name": "graphql",
+  "name": "digital-twin-resolvers",
   "version": "0.3.0",
   "description": "GraphQL resolver's lambda function",
   "main": "./bin/index.js",
@@ -10,7 +10,9 @@
     "compile": "tsc"
   },
   "dependencies": {
-    "digital-twin-api": "git+https://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:x-oauth-basic@github.com/Library-Light-Twin-DSD2023-MDU-POLIMI/digital-twin-api.git#main"
+    "apollo-server-lambda": "^3.13.0",
+    "aws-lambda": "^1.0.7",
+    "mongoose": "^8.0.1"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.92",
