@@ -5,16 +5,23 @@ See [SETUP.md](SETUP.md)
 
 ## List of commands for development
 
-- Build the project, and start a local api (any errors will be printed in the terminal).
+*The commands underneath here are bash commands*
+
+Just if you already have the tooling installed, basic commands you can use to check stuff
+
+- Build the project, and run it locally:
 ```bash
 sam build
+sam validate # optional to check template.json is correct, you can skip this one
 sam local start-api
 ```
 
-- By default, the **digital-twin-api** development branch will be
-  imported. If you need to test a change you made in a pr in that repo,
-  by just using it here, you can do so with these commands. _please remember to check the git-link mentioned here in package.json before you uninstall the package_
+- Deploy the project to the cloud (**this should be done through github actions or similar, when pushing to main, see [PR#7](https://github.com/Library-Light-Twin-DSD2023-MDU-POLIMI/digital-twin-dsd-backend/pull/7)**):
 ```bash
-npm uninstall digital-twin-api
-npm install <git-link-found-in-package.json-without-the-old-branch>#the-test-branch
+sam deploy # and then confirm changes to the cloud
+```
+
+- Run automated tests on the project (**this should also be done, either when pushing to development, or main, implemented in [PR#?]()**)
+```bash
+# TODO missing commands for this
 ```
