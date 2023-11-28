@@ -3,8 +3,8 @@ import {
   LightingType,
   PredictiveStatus,
   Location,
-  WorkOrderStatus
-} from "../../digital-twin-api/index";
+  WorkOrderStatus,
+} from "../../models/index";
 
 export interface IAddLightingAssetInput {
   uid: string;
