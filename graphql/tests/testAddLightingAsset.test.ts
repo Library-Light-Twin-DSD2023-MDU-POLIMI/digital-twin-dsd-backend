@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
-import { LightingAsset } from "../digital-twin-api"; // Model
+import { LightingAsset } from "../models"; // Model
 import { IAddLightingAssetInput } from "../resolvers/iResolvers/iMutations";
 import resolvers from "../resolvers/resolvers";
 
