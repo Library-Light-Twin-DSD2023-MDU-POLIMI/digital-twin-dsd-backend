@@ -216,7 +216,7 @@ const typeDefs = gql`
     workOrders: [WorkOrder]
   }
 
-  type Mutation {
+  type Mutations {
     addLightingAsset(input: AddLightingAssetInput): LightingAsset
     updateLightingAsset(id: ID!, newStatus: CurrentStatus!): LightingAsset
     removeLightingAsset(id: ID!): Boolean
