@@ -2,10 +2,10 @@ import { GraphQLError } from "graphql";
 import mongoose from "mongoose";
 
 import {
-  LightingAsset, 
-  LightingAssetTimeSeriesData, 
-  WorkOrder
-} from "../digital-twin-api/index";
+  LightingAsset,
+  LightingAssetTimeSeriesData,
+  WorkOrder,
+} from "../models/index";
 
 import {
   IAddLightingAssetInput,
@@ -219,7 +219,8 @@ const resolvers = {
 
           return await newLightingAsset.save();
         } catch (error) {
-          throw new GraphQLError("Was not able to add a new lighting asset");
+          console.error("Error in addLightingAsset: ", error);
+          throw new GraphQLError(`Was not able to add a new lighting asset`);
         }
       },
 
@@ -237,6 +238,7 @@ const resolvers = {
           );
           return updatedLightingAsset;
         } catch (error) {
+          console.error("Error in updateLightingAsset: ", error);
           throw new GraphQLError("Was not able to update lighting asset");
         }
       },
@@ -246,6 +248,7 @@ const resolvers = {
             .deletedCount;
           return result > 0;
         } catch (error) {
+          console.error("Error in removeLightingAsset: ", error);
           throw new GraphQLError("Was not able to remove lighting asset");
         }
       },
