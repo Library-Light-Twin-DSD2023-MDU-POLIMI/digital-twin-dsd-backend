@@ -18,5 +18,3 @@ sam local start-api
 npm uninstall digital-twin-api
 npm install <git-link-found-in-package.json-without-the-old-branch>#the-test-branch
 ```
-
-**It is important to remember that, we should change the branch used here, for the main branch, always before doing a merge to main (so that the main branch here doesnt get the development version of digital-twin-api)** 
