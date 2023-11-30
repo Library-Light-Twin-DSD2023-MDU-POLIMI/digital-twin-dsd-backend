@@ -1,11 +1,11 @@
-import { GraphQLError } from "graphql";
-import mongoose from "mongoose";
+import { GraphQLError } from 'graphql';
+import mongoose from 'mongoose';
 
 import {
   LightingAsset,
   LightingAssetTimeSeriesData,
   WorkOrder,
-} from "../models/index";
+} from '../models/index';
 
 import {
   IAddLightingAssetInput,
@@ -13,13 +13,13 @@ import {
   ILightingAssetMeasurementInput,
   IUpdateLightingAssetInput,
   IUpdateWorkOrderInput,
-} from "./iResolvers/iMutations";
+} from './iResolvers/iMutations';
 
 import {
   ILightingAssetFilter,
   ISortAndPaginate,
   ITimeSeriesDataThresholds,
-} from "./iResolvers/iQueries";
+} from './iResolvers/iQueries';
 
 const resolvers = {
   Query: {
@@ -35,7 +35,7 @@ const resolvers = {
       ) {
         // Start with a basic query
         let query = args.input.searchText
-          ? LightingAsset.find({ "location.area": args.input.searchText })
+          ? LightingAsset.find({ 'location.area': args.input.searchText })
           : LightingAsset.find();
 
         // Apply filters
@@ -43,32 +43,32 @@ const resolvers = {
         //Location is not finished
         if (args.filter) {
           if (args.filter.floor) {
-            query = query.where("location.floor").equals(args.filter.floor);
+            query = query.where('location.floor').equals(args.filter.floor);
           }
           if (args.filter.section) {
-            query = query.where("location.section").equals(args.filter.section);
+            query = query.where('location.section').equals(args.filter.section);
           }
           if (args.filter.lightingType) {
-            query = query.where("type").equals(args.filter.lightingType);
+            query = query.where('type').equals(args.filter.lightingType);
           }
           if (args.filter.currentStatus) {
             query = query
-              .where("currentStatus")
+              .where('currentStatus')
               .equals(args.filter.currentStatus);
           }
           if (args.filter.predictedStatus) {
             query = query
-              .where("predictiveStatus")
+              .where('predictiveStatus')
               .equals(args.filter.predictedStatus);
           }
         }
 
         // Apply pagination
         if (args.input) {
-          if (typeof args.input.limit === "number") {
+          if (typeof args.input.limit === 'number') {
             query = query.limit(args.input.limit);
           }
-          if (typeof args.input.offset === "number") {
+          if (typeof args.input.offset === 'number') {
             query = query.skip(args.input.offset);
           }
         }
@@ -107,11 +107,11 @@ const resolvers = {
           Object.entries(args.thresholds).forEach(([key, threshold]) => {
             if (threshold && threshold.thresholdValue !== undefined) {
               const comparisonOperator =
-                threshold.comparison === "LESS"
-                  ? "$lt"
-                  : threshold.comparison === "MORE"
-                  ? "$gt"
-                  : "$eq";
+                threshold.comparison === 'LESS'
+                  ? '$lt'
+                  : threshold.comparison === 'MORE'
+                  ? '$gt'
+                  : '$eq';
               query[key] = { [comparisonOperator]: threshold.thresholdValue };
             }
           });
@@ -134,24 +134,24 @@ const resolvers = {
         const pipeline = [
           {
             $match: {
-              "metaData.assetId": new mongoose.Types.ObjectId(assetId),
+              'metaData.assetId': new mongoose.Types.ObjectId(assetId),
               timestamp: { $gte: startDate, $lte: endDate },
             },
           },
           {
             $group: {
               _id: {
-                day: { $dayOfYear: "$timestamp" },
-                year: { $year: "$timestamp" },
+                day: { $dayOfYear: '$timestamp' },
+                year: { $year: '$timestamp' },
               },
-              averageIlluminance: { $avg: "$illuminance.maintainedAverage" },
-              averageGlare: { $avg: "$glare.UGR" },
-              averageColorRendering: { $avg: "$colorRendering.CRI" },
-              averageColorTemperature: { $avg: "$colorTemperature.CCT" },
-              averageFlicker: { $avg: "$flicker.SVM" },
-              averageColorPreference: { $avg: "$colorPreference.PVF" },
+              averageIlluminance: { $avg: '$illuminance.maintainedAverage' },
+              averageGlare: { $avg: '$glare.UGR' },
+              averageColorRendering: { $avg: '$colorRendering.CRI' },
+              averageColorTemperature: { $avg: '$colorTemperature.CCT' },
+              averageFlicker: { $avg: '$flicker.SVM' },
+              averageColorPreference: { $avg: '$colorPreference.PVF' },
               averagePhotobiologicalSafety: {
-                $avg: "$photobiologicalSafety.UV",
+                $avg: '$photobiologicalSafety.UV',
               },
             },
           },
@@ -160,9 +160,9 @@ const resolvers = {
               _id: 0,
               timestamp: {
                 $concat: [
-                  { $toString: "$_id.year" },
-                  "-",
-                  { $toString: "$_id.day" },
+                  { $toString: '$_id.year' },
+                  '-',
+                  { $toString: '$_id.day' },
                 ],
               },
               averageIlluminance: 1,
@@ -180,7 +180,7 @@ const resolvers = {
         const result = await LightingAssetTimeSeriesData.aggregate(pipeline);
 
         // Format the result to match the GraphQL type 'LightingAssetAverageData'
-        return result.map((item) => ({
+        return result.map(item => ({
           timestamp: item.timestamp,
           averageIlluminance: item.averageIlluminance,
           averageGlare: item.averageGlare,
@@ -219,7 +219,7 @@ const resolvers = {
 
           return await newLightingAsset.save();
         } catch (error) {
-          console.error("Error in addLightingAsset: ", error);
+          console.error('Error in addLightingAsset: ', error);
           throw new GraphQLError(`Was not able to add a new lighting asset`);
         }
       },
@@ -238,8 +238,8 @@ const resolvers = {
           );
           return updatedLightingAsset;
         } catch (error) {
-          console.error("Error in updateLightingAsset: ", error);
-          throw new GraphQLError("Was not able to update lighting asset");
+          console.error('Error in updateLightingAsset: ', error);
+          throw new GraphQLError('Was not able to update lighting asset');
         }
       },
       async removeLightingAsset(_: unknown, { ID }: { ID: string }) {
@@ -248,8 +248,8 @@ const resolvers = {
             .deletedCount;
           return result > 0;
         } catch (error) {
-          console.error("Error in removeLightingAsset: ", error);
-          throw new GraphQLError("Was not able to remove lighting asset");
+          console.error('Error in removeLightingAsset: ', error);
+          throw new GraphQLError('Was not able to remove lighting asset');
         }
       },
     },
@@ -261,7 +261,7 @@ const resolvers = {
         args: { input: ILightingAssetMeasurementInput[] }
       ) {
         try {
-          const newLightingAssetMeasurements = args.input.map((measurement) => {
+          const newLightingAssetMeasurements = args.input.map(measurement => {
             const { assetId, timestamp, ...otherMeasurements } = measurement;
             return {
               metaData: {
@@ -279,7 +279,7 @@ const resolvers = {
           return lightingAssetTimeSeriesData;
         } catch (error) {
           throw new GraphQLError(
-            "Was not able to add new lighting asset measurements"
+            'Was not able to add new lighting asset measurements'
           );
         }
       },
@@ -301,7 +301,7 @@ const resolvers = {
 
           return savedWorkOrder;
         } catch (error) {
-          throw new GraphQLError("Was not able to add a new work order");
+          throw new GraphQLError('Was not able to add a new work order');
         }
       },
 
@@ -317,7 +317,7 @@ const resolvers = {
             today.setHours(0, 0, 0, 0);
 
             if (maintenanceDate < today) {
-              throw new Error("Maintenance date cannot be in the past");
+              throw new Error('Maintenance date cannot be in the past');
             }
           }
 
@@ -331,7 +331,7 @@ const resolvers = {
             args.input.lightingAssetID
           );
           if (!updatedWorkOrder) {
-            throw new GraphQLError("WorkOrder not found");
+            throw new GraphQLError('WorkOrder not found');
           }
 
           if (args.input.lightingAssetID) {
@@ -348,7 +348,7 @@ const resolvers = {
           }
           return updatedWorkOrder;
         } catch (error) {
-          throw new GraphQLError("Was not able to update work order");
+          throw new GraphQLError('Was not able to update work order');
         }
       },
 
@@ -357,7 +357,7 @@ const resolvers = {
           const result = (await WorkOrder.deleteOne({ _id: ID })).deletedCount;
           return result > 0;
         } catch (error) {
-          throw new GraphQLError("Was not able to remove work order");
+          throw new GraphQLError('Was not able to remove work order');
         }
       },
     },
