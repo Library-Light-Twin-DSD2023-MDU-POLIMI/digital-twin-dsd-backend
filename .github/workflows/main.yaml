@@ -18,6 +18,7 @@ jobs:
       - run: sam build --use-container
 
       # Run Unit tests- Specify unit tests here 
+      # TODO add unit tests command here. see how they are supposed to be run
 
       # sam deploy
       - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
