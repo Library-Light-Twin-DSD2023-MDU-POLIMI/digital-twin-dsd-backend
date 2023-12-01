@@ -36,4 +36,4 @@
    ![](.images/image-1.png)
 
 
-5. with that you should be able to see the endpoints in API Gateway, and if you right click on them and use 'Invoke on AWS', you will be able to send custom calls on them for testing. You can also run locally the backend with `sam local invoke`.
+5. with that you should be able to see the endpoints in API Gateway, and if you right click on them and use 'Invoke on AWS', you will be able to send custom calls on them for testing. You can also run locally the backend with `sam local invoke`, or start a local api with `sam local start-api` (i usually use the second one).
