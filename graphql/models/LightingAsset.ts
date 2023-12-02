@@ -19,11 +19,12 @@ export interface ILightingAsset extends Document {
   uid: string;
   currentStatus: CurrentStatus;
   predictiveStatus: {
-    status: 'OKAY' | 'WARNING';
+    status: PredictiveStatus;
     predictedTime: Date;
   };
   type: LightingType;
   location: Location;
+  cilLevel: 1 | 2;
   workOrders: IWorkOrder['_id'][];
 }
 
@@ -36,6 +37,7 @@ const lightingAssetSchema = new Schema<ILightingAsset>({
   },
   predictiveStatus: { type: PredictiveStatusTypeSchema, required: true },
   type: { type: String, enum: ['LED', 'Other'], required: true },
+  cilLevel: { type: Number, enum: [1, 2], required: true },
   location: {
     floor: { type: Number, required: true },
     section: { type: String, required: true },

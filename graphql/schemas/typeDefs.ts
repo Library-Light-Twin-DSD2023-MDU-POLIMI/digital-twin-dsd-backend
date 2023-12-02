@@ -10,6 +10,7 @@ const typeDefs = gql`
     type: LightingType!
     location: Location!
     workOrders: [WorkOrder]
+    cilLevel: Int!
   }
 
   #Predicted type
@@ -31,6 +32,9 @@ const typeDefs = gql`
   enum LightingType {
     LED
     OTHER
+  }
+  enum cilLevel {
+    
   }
 
   input SortAndPaginate {

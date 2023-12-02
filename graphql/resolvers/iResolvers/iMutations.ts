@@ -4,13 +4,17 @@ import {
   PredictiveStatus,
   Location,
   WorkOrderStatus,
-} from "../../models/index";
+} from '../../models/index';
 
 export interface IAddLightingAssetInput {
   uid: string;
   currentStatus: CurrentStatus;
-  predictiveStatus: PredictiveStatus;
+  predictiveStatus: {
+    status: 'OKAY' | 'WARNING';
+    predictedTime: Date;
+  };
   type: LightingType;
+  cilLevel: 1 | 2;
   location: {
     floor: number;
     section: string;
