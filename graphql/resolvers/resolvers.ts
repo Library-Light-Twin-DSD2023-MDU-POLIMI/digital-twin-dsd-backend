@@ -23,7 +23,7 @@ import {
 
 const resolvers = {
   Query: {
-    LightingAsset: {
+    //LightingAsset: {
       async lightingAsset(_: unknown, { ID }: { ID: string }) {
         // Implement logic to fetch a lighting asset based on provided args
         // args.input can be used for sorting and pagination
@@ -76,9 +76,9 @@ const resolvers = {
         // Execute and return the query
         return await query.exec();
       },
-    },
+    //},
 
-    LightingAssetTimeSeriesData: {
+    //LightingAssetTimeSeriesData: {
       async getLightingAssetTimeSeriesData(
         _: any,
         args: {
@@ -191,9 +191,9 @@ const resolvers = {
           averagePhotobiologicalSafety: item.averagePhotobiologicalSafety,
         }));
       },
-    },
+    //},
 
-    WorkOrder: {
+    //WorkOrder: {
       async workOrder(_: unknown, { ID }: { ID: string }) {
         return await WorkOrder.findById(ID);
       },
@@ -201,11 +201,11 @@ const resolvers = {
       async workOrders(_: unknown) {
         return await WorkOrder.find();
       },
-    },
+    //},
   },
 
   Mutations: {
-    LightingAsset: {
+    //LightingAsset: {
       //LightingAsset
 
       async addLightingAsset(
@@ -252,10 +252,10 @@ const resolvers = {
           throw new GraphQLError("Was not able to remove lighting asset");
         }
       },
-    },
+    //},
 
     //When testing make sure the the date is in the correct format
-    LightingAssetTimeSeriesData: {
+    //LightingAssetTimeSeriesData: {
       async addLightingAssetMeasurements(
         _: unknown,
         args: { input: ILightingAssetMeasurementInput[] }
@@ -283,8 +283,8 @@ const resolvers = {
           );
         }
       },
-    },
-    WorkOrder: {
+    //},
+   // WorkOrder: {
       async addWorkOrder(_: unknown, args: { input: IAddWorkOrderInput }) {
         try {
           // Create and save the new WorkOrder
@@ -360,7 +360,7 @@ const resolvers = {
           throw new GraphQLError("Was not able to remove work order");
         }
       },
-    },
+    //},
   },
 };
 export default resolvers;
