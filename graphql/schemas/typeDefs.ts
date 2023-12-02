@@ -120,14 +120,23 @@ const typeDefs = gql`
 
   #WorkOrder
   type WorkOrder {
-    _id: ID!
-    workOrderID: String!
-    lightingAssetID: ID!
-    workOrderStatus: WorkOrderStatus!
-    description: String!
-    comment: String
-    location: Location!
-    dateOfMaintenance: String!
+  _id: ID!
+  workOrderID: String!
+  lightingAssetID: ID!
+  type: WorkOrderType!
+  workOrderStatus: WorkOrderStatus!
+  description: String!
+  comment: String
+  location: Location!
+  dateOfMaintenance: String!
+  excecutionStartDate: String
+  excecutedDate: String
+}
+
+  enum WorkOrderType {
+    CM
+    PM
+    PDM
   }
 
   enum WorkOrderStatus {
@@ -191,25 +200,32 @@ const typeDefs = gql`
 
   # Input types and enums for WorkOrder
 
-  input AddWorkOrderInput {
-    workOrderID: String!
-    lightingAssetID: ID!
-    workOrderStatus: WorkOrderStatus!
-    description: String!
-    comment: String
-    location: Location!
-    dateOfMaintenance: String!
-  }
+input AddWorkOrderInput {
+  workOrderID: String!
+  lightingAssetID: ID!
+  type: WorkOrderType!
+  workOrderStatus: WorkOrderStatus!
+  description: String!
+  comment: String
+  location: Location!
+  dateOfMaintenance: String!
+  excecutionStartDate: String
+  excecutedDate: String
+}
 
-  input UpdateWorkOrderInput {
-    workOrderID: String!
-    lightingAssetID: ID!
-    workOrderStatus: WorkOrderStatus
-    description: String
-    comment: String
-    location: Location
-    dateOfMaintenance: String
-  }
+
+input UpdateWorkOrderInput {
+  workOrderID: String
+  lightingAssetID: ID
+  type: WorkOrderType
+  workOrderStatus: WorkOrderStatus
+  description: String
+  comment: String
+  location: Location
+  dateOfMaintenance: String
+  excecutionStartDate: String
+  excecutedDate: String
+}
 
   type Query {
     lightingAsset(id: ID!): LightingAsset
