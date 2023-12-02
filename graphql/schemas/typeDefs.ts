@@ -1,4 +1,4 @@
-import { gql } from "apollo-server-lambda";
+import { gql } from 'apollo-server-lambda';
 const typeDefs = gql`
   #LightingAsset
 
@@ -6,21 +6,26 @@ const typeDefs = gql`
     _id: ID!
     uid: String!
     currentStatus: CurrentStatus!
-    predictiveStatus: PredictiveStatus!
+    predictiveStatus: PredictiveStatusType!
     type: LightingType!
     location: Location!
     workOrders: [WorkOrder]
+  }
+
+  #Predicted type
+  type PredictedStatusType {
+    status: PredictiveStatus!
+    predictedTime: String!
+  }
+  enum PredictiveStatus {
+    OKAY
+    WARNING
   }
 
   enum CurrentStatus {
     GOOD
     WARNING
     BROKEN
-  }
-
-  enum PredictiveStatus {
-    OKAY
-    WARNING
   }
 
   enum LightingType {
@@ -127,7 +132,7 @@ const typeDefs = gql`
   input AddLightingAssetInput {
     uid: String!
     currentStatus: CurrentStatus!
-    predictiveStatus: PredictiveStatus
+    predictiveStatus: PredictiveStatusType
     type: LightingType!
     location: Location!
   }
@@ -135,7 +140,7 @@ const typeDefs = gql`
   input UpdateLightingAssetInput {
     uid: String!
     currentStatus: CurrentStatus
-    predictiveStatus: PredictiveStatus
+    predictiveStatus: PredictiveStatusType
     location: Location
   }
 
