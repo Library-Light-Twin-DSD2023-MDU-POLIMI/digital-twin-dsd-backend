@@ -73,31 +73,38 @@ const typeDefs = gql`
   type Illuminance {
     maintainedAverage: Float
     uniformityRatio: Float
+    healthStatus: Int
   }
 
   type Glare {
     UGR: Float
+    healthStatus: Int
   }
 
   type ColorRendering {
     CRI: Float
+    healthStatus: Int
   }
 
   type ColorTemperature {
     CCT: Float
     Duv: Float
+    healthStatus: Int
   }
 
   type Flicker {
     SVM: Float
+    healthStatus: Int
   }
 
   type ColorPreference {
     PVF: Float
+    healthStatus: Int
   }
 
   type PhotobiologicalSafety {
     UV: Float
+    healthStatus: Int
   }
 
   type LightingAssetAverageData {
