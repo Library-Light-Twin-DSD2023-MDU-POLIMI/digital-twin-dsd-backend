@@ -291,6 +291,8 @@ input UpdateWorkOrderInput {
       startTime: String!
       endTime: String!
     ): LightingAssetAverageData
+    metrics: [Metric]
+    metric(metric: String!): Metric
     workOrder(id: ID!): WorkOrder
     workOrders: [WorkOrder]
   }

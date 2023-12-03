@@ -193,6 +193,14 @@ const resolvers = {
     },
     //},
 
+    //MetricMetadata: {
+    async metrics() {
+      return await MetricMetaData.find();
+    },
+    async metric(_: unknown, { metric }: { metric: string }) {
+      return await MetricMetaData.findOne({ metric });
+    },
+    //}
     //WorkOrder: {
     async workOrder(_: unknown, { ID }: { ID: string }) {
       return await WorkOrder.findById(ID);
