@@ -306,10 +306,8 @@ const resolvers = {
       });
 
       if (existingMetric) {
-        // If the metric already exists, you can either throw an error or return some kind of message
+        // If the metric already exists, throw an error or return some kind of message
         throw new Error('A metric with this name already exists.');
-        // Or you can return null or a specific message indicating the metric exists
-        // return null; // or return { message: "Metric already exists" };
       } else {
         // If the metric does not exist, create a new one
         const newMetric = new MetricMetaData(args.input);
@@ -336,8 +334,6 @@ const resolvers = {
         });
       } else {
         throw new Error('No valid fields provided for update.');
-        // Or return the existing metric without changes
-        // return await MetricMetaData.findOne({ metric });
       }
     },
     async removeMetric(_: unknown, { metric }: { metric: string }) {
