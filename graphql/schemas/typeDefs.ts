@@ -307,6 +307,9 @@ input UpdateWorkOrderInput {
     addLightingAssetMeasurements(
       inputs: [LightingAssetMeasurementInput!]!
     ): [LightingAssetTimeSeriesData]
+    addMetric(metric: String!, unit: String, information: String, tooltipSummary: String): Metric
+    updateMetric(metric: String!, unit: String, information: String, tooltipSummary: String): Metric
+    removeMetric(metric: String!): Metric
   }
 `;
 

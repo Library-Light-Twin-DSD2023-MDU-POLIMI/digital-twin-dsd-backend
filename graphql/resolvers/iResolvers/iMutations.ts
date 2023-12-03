@@ -24,10 +24,10 @@ export interface IAddLightingAssetInput {
 
 export interface IUpdateLightingAssetInput {
   uid: string;
-  currentStatus: CurrentStatus;
-  predictiveStatus: PredictiveStatus;
-  type: LightingType;
-  location: {
+  currentStatus?: CurrentStatus;
+  predictiveStatus?: PredictiveStatus;
+  type?: LightingType;
+  location?: {
     floor: number;
     section: string;
     area: string;
@@ -62,6 +62,20 @@ export interface ILightingAssetMeasurementInput {
   };
 }
 
+export interface IAddMetricMetaData {
+  metric: string;
+  unit: string;
+  information: string;
+  tooltipSummary: string;
+}
+
+export interface IUpdateMetricMetaData {
+  metric: string;
+  unit?: string;
+  information?: string;
+  tooltipSummary?: string;
+}
+
 export interface IAddWorkOrderInput {
   workOrderID: string;
   lightingAssetID: string;
@@ -74,9 +88,9 @@ export interface IAddWorkOrderInput {
 export interface IUpdateWorkOrderInput {
   workOrderID: string;
   lightingAssetID: string;
-  workOrderStatus: WorkOrderStatus;
-  description: string;
-  comment: string;
-  location: Location;
-  dateOfMaintenance: Date;
+  workOrderStatus?: WorkOrderStatus;
+  description?: string;
+  comment?: string;
+  location?: Location;
+  dateOfMaintenance?: Date;
 }

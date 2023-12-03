@@ -9,9 +9,11 @@ import {
 
 import {
   IAddLightingAssetInput,
+  IAddMetricMetaData,
   IAddWorkOrderInput,
   ILightingAssetMeasurementInput,
   IUpdateLightingAssetInput,
+  IUpdateMetricMetaData,
   IUpdateWorkOrderInput,
 } from './iResolvers/iMutations';
 
@@ -214,7 +216,6 @@ const resolvers = {
 
   Mutations: {
     //LightingAsset: {
-    //LightingAsset
 
     async addLightingAsset(
       _: unknown,
@@ -295,6 +296,55 @@ const resolvers = {
       }
     },
     //},
+
+    // MetricMetaData: {
+
+    async addMetric(_: unknown, args: { input: IAddMetricMetaData }) {
+      // Check if the metric already exists
+      const existingMetric = await MetricMetaData.findOne({
+        metric: args.input.metric,
+      });
+
+      if (existingMetric) {
+        // If the metric already exists, you can either throw an error or return some kind of message
+        throw new Error('A metric with this name already exists.');
+        // Or you can return null or a specific message indicating the metric exists
+        // return null; // or return { message: "Metric already exists" };
+      } else {
+        // If the metric does not exist, create a new one
+        const newMetric = new MetricMetaData(args.input);
+        return await newMetric.save();
+      }
+    },
+
+    async updateMetric(_: unknown, args: { input: IUpdateMetricMetaData }) {
+      const { metric, unit, information, tooltipSummary } = args.input;
+
+      // Construct an update object with only defined fields using object spread syntax
+      const updateData: IUpdateMetricMetaData = {
+        metric,
+        ...(unit !== undefined && { unit }),
+        ...(information !== undefined && { information }),
+        ...(tooltipSummary !== undefined && { tooltipSummary }),
+      };
+
+      // Check if there's something to update other than the metric itself
+      if (Object.keys(updateData).length > 1) {
+        // '1' accounts for the 'metric' field
+        return await MetricMetaData.findOneAndUpdate({ metric }, updateData, {
+          new: true,
+        });
+      } else {
+        throw new Error('No valid fields provided for update.');
+        // Or return the existing metric without changes
+        // return await MetricMetaData.findOne({ metric });
+      }
+    },
+    async removeMetric(_: unknown, { metric }: { metric: string }) {
+      return await MetricMetaData.findOneAndDelete({ metric });
+    },
+    //}
+
     // WorkOrder: {
     async addWorkOrder(_: unknown, args: { input: IAddWorkOrderInput }) {
       try {
