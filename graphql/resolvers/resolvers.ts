@@ -267,17 +267,18 @@ const resolvers = {
               metaData: {
                 assetId: new mongoose.Types.ObjectId(assetId),
               },
-              timpstamp: new Date(timestamp),
+              timestamp: new Date(timestamp),
               ...otherMeasurements,
             };
           });
-
           const lightingAssetTimeSeriesData =
             await LightingAssetTimeSeriesData.insertMany(
               newLightingAssetMeasurements
             );
+          console.log(lightingAssetTimeSeriesData);
           return lightingAssetTimeSeriesData;
         } catch (error) {
+          console.error("Error in addLightingAssetMeasurements: ", error);
           throw new GraphQLError(
             "Was not able to add new lighting asset measurements"
           );
