@@ -82,77 +82,77 @@ const typeDefs = gql`
   healthStatus: Int # Number from 1-5, indicating the health status of maintainedAverage
 }
 
-type UniformityRatio {
-  value: Float
-  healthStatus: Int # Number from 1-5, indicating the health status of uniformityRatio
-}
+  type UniformityRatio {
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of uniformityRatio
+  }
 
-#Glare
+  #Glare
 
-type Glare {
-  UGR: UGR
-}
+  type Glare {
+    UGR: UGR
+  }
 
-type UGR {
-  value: Float
-  healthStatus: Int # Number from 1-5, indicating the health status of UGR
-}
+  type UGR {
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of UGR
+  }
 
-# ColorRendering
-type ColorRendering {
-  CRI: CRI
-}
+  # ColorRendering
+  type ColorRendering {
+    CRI: CRI
+  }
 
-type CRI {
-  value: Float
-  healthStatus: Int # Number from 1-5, indicating the health status of CRI
-}
+  type CRI {
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of CRI
+  }
 
-#ColorTemperature 
- type ColorTemperature {
-  CCT: CCT
-  Duv: Duv
-}
+  #ColorTemperature 
+  type ColorTemperature {
+    CCT: CCT
+    Duv: Duv
+  }
 
-type CCT {
-  value: Float
-  healthStatus: Int # Number from 1-5, indicating the health status of CCT
-}
+  type CCT {
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of CCT
+  }
 
-type Duv {
-  value: Float
-  healthStatus: Int # Number from 1-5, indicating the health status of Duv
-}
+  type Duv {
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of Duv
+  }
 
-#Flicker
-type Flicker {
-  SVM: SVM
-}
+  #Flicker
+  type Flicker {
+    SVM: SVM
+  }
 
-type SVM {
-  value: Float
-  healthStatus: Int # Number from 1-5, indicating the health status of SVM
-}
+  type SVM {
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of SVM
+  }
 
-#ColorPreference
-type ColorPreference {
-  PVF: PVF
-}
+  #ColorPreference
+  type ColorPreference {
+    PVF: PVF
+  }
 
-type PVF {
-  value: Float
-  healthStatus: Int # Number from 1-5, indicating the health status of PVF
-}
+  type PVF {
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of PVF
+  }
 
-#PhotobiologicalSafety
-type PhotobiologicalSafety {
-  UV: PhotobiologicalSafetyUV
-}
+  #PhotobiologicalSafety
+  type PhotobiologicalSafety {
+    UV: PhotobiologicalSafetyUV
+  }
 
-type PhotobiologicalSafetyUV {
-  value: Float
-  healthStatus: Int # Number from 1-5, indicating the health status of UV
-}
+  type PhotobiologicalSafetyUV {
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of UV
+  }
 
   type LightingAssetAverageData {
     timestamp: String!
@@ -164,6 +164,14 @@ type PhotobiologicalSafetyUV {
     averageColorPreference: Float
     averagePhotobiologicalSafety: Float
   }
+
+  #MetricMetaData
+  type Metric {
+  metric: String!
+  unit: String
+  information: String
+  tooltipSummary: String
+}
 
   #WorkOrder
   type WorkOrder {
