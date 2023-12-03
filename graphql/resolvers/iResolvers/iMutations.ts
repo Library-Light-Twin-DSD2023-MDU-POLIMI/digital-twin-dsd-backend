@@ -38,27 +38,27 @@ export interface ILightingAssetMeasurementInput {
   assetId: string;
   timestamp: string;
   illuminance?: {
-    maintainedAverage?: number;
-    uniformityRatio?: number;
+    maintainedAverage?: { value: number };
+    uniformityRatio?: { value: number };
   };
   glare?: {
-    UGR?: number;
+    UGR?: { value: number };
   };
   colorRendering?: {
-    CRI?: number;
+    CRI?: { value: number };
   };
   colorTemperature?: {
-    CCT?: number;
-    Duv?: number;
+    CCT?: { value: number };
+    Duv?: { value: number };
   };
   flicker?: {
-    SVM?: number;
+    SVM?: { value: number };
   };
   colorPreference?: {
-    PVF?: number;
+    PVF?: { value: number };
   };
   photobiologicalSafety?: {
-    UV?: number;
+    UV?: { value: number };
   };
 }
 

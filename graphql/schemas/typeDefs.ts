@@ -70,42 +70,89 @@ const typeDefs = gql`
     photobiologicalSafety: PhotobiologicalSafety
   }
 
+
+#Illuminance
   type Illuminance {
-    maintainedAverage: Float
-    uniformityRatio: Float
-    healthStatus: Int
+    maintainedAverage: MaintainedAverage
+    uniformityRatio: UniformityRatio
   }
 
-  type Glare {
-    UGR: Float
-    healthStatus: Int
-  }
+  type MaintainedAverage {
+  value: Float
+  healthStatus: Int # Number from 1-5, indicating the health status of maintainedAverage
+}
 
-  type ColorRendering {
-    CRI: Float
-    healthStatus: Int
-  }
+type UniformityRatio {
+  value: Float
+  healthStatus: Int # Number from 1-5, indicating the health status of uniformityRatio
+}
 
-  type ColorTemperature {
-    CCT: Float
-    Duv: Float
-    healthStatus: Int
-  }
+#Glare
 
-  type Flicker {
-    SVM: Float
-    healthStatus: Int
-  }
+type Glare {
+  UGR: UGR
+}
 
-  type ColorPreference {
-    PVF: Float
-    healthStatus: Int
-  }
+type UGR {
+  value: Float
+  healthStatus: Int # Number from 1-5, indicating the health status of UGR
+}
 
-  type PhotobiologicalSafety {
-    UV: Float
-    healthStatus: Int
-  }
+# ColorRendering
+type ColorRendering {
+  CRI: CRI
+}
+
+type CRI {
+  value: Float
+  healthStatus: Int # Number from 1-5, indicating the health status of CRI
+}
+
+#ColorTemperature 
+ type ColorTemperature {
+  CCT: CCT
+  Duv: Duv
+}
+
+type CCT {
+  value: Float
+  healthStatus: Int # Number from 1-5, indicating the health status of CCT
+}
+
+type Duv {
+  value: Float
+  healthStatus: Int # Number from 1-5, indicating the health status of Duv
+}
+
+#Flicker
+type Flicker {
+  SVM: SVM
+}
+
+type SVM {
+  value: Float
+  healthStatus: Int # Number from 1-5, indicating the health status of SVM
+}
+
+#ColorPreference
+type ColorPreference {
+  PVF: PVF
+}
+
+type PVF {
+  value: Float
+  healthStatus: Int # Number from 1-5, indicating the health status of PVF
+}
+
+#PhotobiologicalSafety
+type PhotobiologicalSafety {
+  UV: PhotobiologicalSafetyUV
+}
+
+type PhotobiologicalSafetyUV {
+  value: Float
+  healthStatus: Int # Number from 1-5, indicating the health status of UV
+}
 
   type LightingAssetAverageData {
     timestamp: String!

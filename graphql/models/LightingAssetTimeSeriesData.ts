@@ -1,48 +1,46 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { ILightingAsset } from './LightingAsset'; // Assuming LightingAsset is in the same directory
 
-export interface ILightingAssetTimeSeriesData extends Document {
-  timestamp: Date;
-  metaData: Object;
-  assetId: ILightingAsset['_id'];
-  illuminance?: {
-    maintainedAverage?: number;
-    uniformityRatio?: number;
-    healthStatus?: number;
-  };
-  glare?: {
-    UGR?: number;
-    healthStatus?: number;
-  };
-  colorRendering?: {
-    CRI?: number;
-    healthStatus?: number;
-  };
-  colorTemperature?: {
-    CCT?: number;
-    Duv?: number;
-    healthStatus?: number;
-  };
-  flicker?: {
-    SVM?: number;
-    healthStatus?: number;
-  };
-  colorPreference?: {
-    PVF?: number;
-    healthStatus?: number;
-  };
-  photobiologicalSafety?: {
-    UV?: number;
-    healthStatus?: number;
-  };
-}
-
 const healthStatusSchema = {
   type: Number,
   required: true,
   min: 1,
   max: 5,
 };
+
+const metricSchema = new Schema({
+  value: { type: Number, required: true },
+  healthStatus: healthStatusSchema,
+});
+
+export interface ILightingAssetTimeSeriesData extends Document {
+  timestamp: Date;
+  metaData: Object;
+  assetId: ILightingAsset['_id'];
+  illuminance?: {
+    maintainedAverage?: typeof metricSchema;
+    uniformityRatio?: typeof metricSchema;
+  };
+  glare?: {
+    UGR?: typeof metricSchema;
+  };
+  colorRendering?: {
+    CRI?: typeof metricSchema;
+  };
+  colorTemperature?: {
+    CCT?: typeof metricSchema;
+    Duv?: typeof metricSchema;
+  };
+  flicker?: {
+    SVM?: typeof metricSchema;
+  };
+  colorPreference?: {
+    PVF?: typeof metricSchema;
+  };
+  photobiologicalSafety?: {
+    UV?: typeof metricSchema;
+  };
+}
 
 const lightingAssetTimeSeriesDataSchema =
   new Schema<ILightingAssetTimeSeriesData>(
@@ -56,34 +54,27 @@ const lightingAssetTimeSeriesDataSchema =
         },
       },
       illuminance: {
-        maintainedAverage: { type: Number },
-        uniformityRatio: { type: Number },
-        healthStatus: { type: healthStatusSchema },
+        maintainedAverage: metricSchema,
+        uniformityRatio: metricSchema,
       },
       glare: {
-        UGR: { type: Number },
-        healthStatus: { type: healthStatusSchema },
+        UGR: metricSchema,
       },
       colorRendering: {
-        CRI: { type: Number },
-        healthStatus: { type: healthStatusSchema },
+        CRI: metricSchema,
       },
       colorTemperature: {
-        CCT: { type: Number },
-        Duv: { type: Number },
-        healthStatus: { type: healthStatusSchema },
+        CCT: metricSchema,
+        Duv: metricSchema,
       },
       flicker: {
-        SVM: { type: Number },
-        healthStatus: { type: healthStatusSchema },
+        SVM: metricSchema,
       },
       colorPreference: {
-        PVF: { type: Number },
-        healthStatus: { type: healthStatusSchema },
+        PVF: metricSchema,
       },
       photobiologicalSafety: {
-        UV: { type: Number },
-        healthStatus: { type: healthStatusSchema },
+        UV: metricSchema,
       },
     },
     {
