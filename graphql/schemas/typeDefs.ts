@@ -44,7 +44,7 @@ const typeDefs = gql`
     location: Location
     lightingType: LightingType
     currentStatus: CurrentStatus
-    predictedStatus: PredictiveStatus
+    predictedStatus: PredictedStatusType
   }
 
   #Location
@@ -172,8 +172,8 @@ const typeDefs = gql`
     comment: String
     location: Location!
     dateOfMaintenance: String!
-    excecutionStartDate: String
-    excecutedDate: String
+    executionStartDate: String
+    executedDate: String
   }
 
   enum WorkOrderType {

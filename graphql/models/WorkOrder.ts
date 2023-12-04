@@ -16,8 +16,8 @@ export interface IWorkOrder extends Document {
     section: string;
   };
   dateOfMaintenance: Date;
-  excecutionStartDate: Date;
-  excecutedDate: Date;
+  executionStartDate: Date;
+  executedDate: Date;
 }
 
 const workOrderSchema = new Schema<IWorkOrder>({
@@ -44,8 +44,8 @@ const workOrderSchema = new Schema<IWorkOrder>({
     section: { type: String, required: true },
   },
   dateOfMaintenance: { type: Date, required: true },
-  excecutionStartDate: { type: Date },
-  excecutedDate: { type: Date },
+  executionStartDate: { type: Date },
+  executedDate: { type: Date },
 });
 
 const WorkOrder = mongoose.model<IWorkOrder>('WorkOrder', workOrderSchema);
