@@ -1,7 +1,6 @@
 import { gql } from 'apollo-server-lambda';
 const typeDefs = gql`
   #LightingAsset
-
   type LightingAsset {
     _id: ID!
     uid: String!
