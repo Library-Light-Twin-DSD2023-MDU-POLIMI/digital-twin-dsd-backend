@@ -258,7 +258,8 @@ const resolvers = {
             metaData: {
               assetId: new mongoose.Types.ObjectId(assetId),
             },
-            timpstamp: new Date(timestamp),
+
+            timestamp: new Date(timestamp),
             ...otherMeasurements,
           };
         });
