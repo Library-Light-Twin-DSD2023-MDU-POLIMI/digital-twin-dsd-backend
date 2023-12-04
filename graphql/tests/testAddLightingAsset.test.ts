@@ -32,10 +32,9 @@ describe('addLightingAsset Resolver', () => {
   });
 
   test('should add a new lighting asset', async () => {
-    const result = await resolvers.Mutations.LightingAsset.addLightingAsset(
-      null,
-      { input: mockInput }
-    );
+    const result = await resolvers.Mutations.addLightingAsset(null, {
+      input: mockInput,
+    });
 
     expect(result).toBeDefined();
     expect(result.uid).toBe(mockInput.uid);

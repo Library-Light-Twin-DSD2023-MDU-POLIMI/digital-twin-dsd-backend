@@ -35,10 +35,9 @@ describe('updateLightingAsset Resolver', () => {
 
   test('should update the asset', async () => {
     // Add a new asset
-    const result = await resolvers.Mutations.LightingAsset.addLightingAsset(
-      null,
-      { input: mockInput }
-    );
+    const result = await resolvers.Mutations.addLightingAsset(null, {
+      input: mockInput,
+    });
 
     const updateData: IUpdateLightingAssetInput = {
       uid: result.uid,
