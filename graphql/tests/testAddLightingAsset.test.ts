@@ -1,25 +1,24 @@
-import mongoose from "mongoose";
-import { v4 as uuidv4 } from "uuid";
-import { LightingAsset } from "../models"; // Model
-import { IAddLightingAssetInput } from "../resolvers/iResolvers/iMutations";
-import resolvers from "../resolvers/resolvers";
+import mongoose from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
+import { LightingAsset } from '../models'; // Model
+import { IAddLightingAssetInput } from '../resolvers/iResolvers/iMutations';
+import resolvers from '../resolvers/resolvers';
 
 const mockInput: IAddLightingAssetInput = {
   uid: uuidv4(), // Generates a unique UUID each time
-  currentStatus: "good",
-  predictiveStatus: "okay",
-  type: "LED",
+  currentStatus: 'good',
+  predictiveStatus: 'okay',
+  type: 'LED',
   location: {
     floor: 1,
-    section: "North Wing",
-    area: "Reception",
+    section: 'North Wing',
+    area: 'Reception',
   },
 };
 
-describe("addLightingAsset Resolver", () => {
+describe('addLightingAsset Resolver', () => {
   beforeAll(async () => {
-    const connectionString =
-      "mongodb+srv://application:lol@dsd.iaano1k.mongodb.net/";
+    const connectionString = process.env.TEST_DB_CONNECTION_STRING;
     await mongoose.connect(connectionString, {});
   });
 
@@ -27,11 +26,10 @@ describe("addLightingAsset Resolver", () => {
     await mongoose.connection.close();
   });
 
-  test("should add a new lighting asset", async () => {
-    const result = await resolvers.Mutations.LightingAsset.addLightingAsset(
-      null,
-      { input: mockInput }
-    );
+  test('should add a new lighting asset', async () => {
+    const result = await resolvers.Mutations.addLightingAsset(null, {
+      input: mockInput,
+    });
 
     expect(result).toBeDefined();
     expect(result.uid).toBe(mockInput.uid);
