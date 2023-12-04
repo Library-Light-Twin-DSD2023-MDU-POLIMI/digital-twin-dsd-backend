@@ -24,7 +24,6 @@ import {
 const resolvers = {
   Query: {
     async lightingAsset(_: unknown, { ID }: { ID: string }) {
-      // Implement logic to fetch a lighting asset based on provided args
       // args.input can be used for sorting and pagination
       return await LightingAsset.findById(ID);
     },
@@ -38,8 +37,6 @@ const resolvers = {
         : LightingAsset.find();
 
       // Apply filters
-
-      //Location is not finished
       if (args.filter) {
         if (args.filter.floor) {
           query = query.where('location.floor').equals(args.filter.floor);
