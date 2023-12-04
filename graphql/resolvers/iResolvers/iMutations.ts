@@ -37,6 +37,9 @@ export interface IUpdateLightingAssetInput {
 export interface ILightingAssetMeasurementInput {
   assetId: string;
   timestamp: string;
+  power?: {
+    WATT?: { value: number };
+  };
   illuminance?: {
     maintainedAverage?: { value: number };
     uniformityRatio?: { value: number };

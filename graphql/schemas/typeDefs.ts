@@ -57,6 +57,7 @@ const typeDefs = gql`
   type LightingAssetTimeSeriesData {
     timestamp: String!
     assetId: ID!
+    power: Power
     illuminance: Illuminance
     glare: Glare
     colorRendering: ColorRendering
@@ -64,6 +65,16 @@ const typeDefs = gql`
     flicker: Flicker
     colorPreference: ColorPreference
     photobiologicalSafety: PhotobiologicalSafety
+  }
+
+  #Power
+  type Power {
+    WATT: WATT
+  }
+
+  type WATT {
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of Watt
   }
 
   #Illuminance
@@ -83,7 +94,6 @@ const typeDefs = gql`
   }
 
   #Glare
-
   type Glare {
     UGR: UGR
   }
@@ -211,6 +221,7 @@ const typeDefs = gql`
   input LightingAssetMeasurementInput {
     assetId: ID!
     timestamp: String!
+    power: Power
     illuminance: Illuminance
     glare: Glare
     colorRendering: ColorRendering
@@ -231,6 +242,7 @@ const typeDefs = gql`
   }
 
   input TimeSeriesDataThresholds {
+    power: ThresholdInput
     illuminance: ThresholdInput
     glare: ThresholdInput
     colorRendering: ThresholdInput
