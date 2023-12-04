@@ -34,7 +34,7 @@ const workOrderSchema = new Schema<IWorkOrder>({
   },
   workOrderStatus: {
     type: String,
-    enum: ['scheduled', 'completed', 'notCompleted'], // Updated to match new status values
+    enum: ['scheduled', 'completed', 'notCompleted'],
     required: true,
   },
   description: { type: String, required: true },
