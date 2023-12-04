@@ -168,9 +168,18 @@ const typeDefs = gql`
   #MetricMetaData
   type Metric {
   metric: String!
-  unit: String
+  unit: String!
+  scale: Scale
   information: String
   tooltipSummary: String
+}
+
+type Scale {
+  tooHigh: String
+  perfect: String
+  good: String
+  mid: String
+  tooLow: String
 }
 
   #WorkOrder
@@ -253,7 +262,26 @@ const typeDefs = gql`
     photobiologicalSafety: ThresholdInput
   }
 
-  # Input types and enums for WorkOrder
+
+# Input types and enums for MetricMetaData
+
+input MetricMetaDataInput {
+  metric: String!
+  unit: String!
+  scale: ScaleInput
+  information: String
+  tooltipSummary: String
+}
+
+input ScaleInput {
+  tooHigh: String
+  perfect: String
+  good: String
+  mid: String
+  tooLow: String
+}
+
+# Input types and enums for WorkOrder
 
 input AddWorkOrderInput {
   workOrderID: String!
@@ -315,8 +343,8 @@ input UpdateWorkOrderInput {
     addLightingAssetMeasurements(
       inputs: [LightingAssetMeasurementInput!]!
     ): [LightingAssetTimeSeriesData]
-    addMetric(metric: String!, unit: String, information: String, tooltipSummary: String): Metric
-    updateMetric(metric: String!, unit: String, information: String, tooltipSummary: String): Metric
+    addMetric(input: MetricMetaDataInput): Metric
+    updateMetric(input: MetricMetaDataInput): Metric
     removeMetric(metric: String!): Metric
   }
 `;
