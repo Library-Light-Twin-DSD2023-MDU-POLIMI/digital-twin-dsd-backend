@@ -89,7 +89,7 @@ export interface IUpdateMetricMetaData {
   unit?: string;
   information?: string;
   tooltipSummary?: string;
-  scale: {
+  scale?: {
     tooHigh: string;
     perfect: string;
     good: string;

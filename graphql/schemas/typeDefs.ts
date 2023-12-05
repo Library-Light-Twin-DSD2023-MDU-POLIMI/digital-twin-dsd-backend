@@ -349,8 +349,8 @@ const typeDefs = gql`
       inputs: [LightingAssetMeasurementInput!]!
     ): [LightingAssetTimeSeriesData]
     addMetric(input: MetricMetaDataInput): Metric
-    updateMetric(input: MetricMetaDataInput): Metric
-    removeMetric(metric: String!): Metric
+    updateMetric(id: ID!, input: MetricMetaDataInput): Metric
+    removeMetric(id: ID!): Metric
   }
 `;
 
