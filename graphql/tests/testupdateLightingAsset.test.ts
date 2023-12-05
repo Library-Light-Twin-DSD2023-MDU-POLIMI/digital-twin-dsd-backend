@@ -20,6 +20,7 @@ const mockInput: IAddLightingAssetInput = {
     section: 'North Wing',
     area: 'Reception',
   },
+  cilLevel: 1,
 };
 
 describe('updateLightingAsset Resolver', () => {

@@ -20,6 +20,7 @@ const mockInput: IAddLightingAssetInput = {
     section: 'North Wing',
     area: 'Reception',
   },
+  cilLevel: 1,
 };
 
 describe('removeLightingAsset Resolver', () => {
@@ -40,10 +41,9 @@ describe('removeLightingAsset Resolver', () => {
     });
 
     // Remove asset
-    const removalResult =
-      await resolvers.Mutations.LightingAsset.removeLightingAsset(null, {
-        ID: result._id.toString(),
-      });
+    const removalResult = await resolvers.Mutations.removeLightingAsset(null, {
+      ID: result._id.toString(),
+    });
 
     // Assertions to check if the asset was removed
     expect(removalResult).toBeTruthy();
