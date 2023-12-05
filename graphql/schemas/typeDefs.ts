@@ -303,7 +303,7 @@ const typeDefs = gql`
 
   type Mutations {
     addLightingAsset(input: AddLightingAssetInput): LightingAsset
-    updateLightingAsset(id: ID!, newStatus: CurrentStatus!): LightingAsset
+    updateLightingAsset(id: ID!, input: UpdateLightingAssetInput): LightingAsset
     removeLightingAsset(id: ID!): Boolean
     addWorkOrder(input: AddWorkOrderInput!): WorkOrder
     removeWorkOrder(id: ID!): Boolean

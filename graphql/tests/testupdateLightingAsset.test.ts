@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const mockInput: IAddLightingAssetInput = {
   uid: uuidv4(), // Generates a unique UUID each time
-  currentStatus: 'good',
+  currentStatus: 'GOOD',
   predictiveStatus: {
     status: 'OKAY',
     predictedTime: new Date(),
@@ -36,20 +36,24 @@ describe('updateLightingAsset Resolver', () => {
 
   test('should update the asset', async () => {
     // Add a new asset
-    const result = await resolvers.Mutations.addLightingAsset(null, {
+    const result = await resolvers.Mutations.addLig htingAsset(null, {
       input: mockInput,
     });
 
     const updateData: IUpdateLightingAssetInput = {
       uid: result.uid,
-      currentStatus: 'warning',
-      predictiveStatus: 'warning',
+      currentStatus: 'GOOD',
+      predictiveStatus: {
+        status: 'WARNING',
+        predictedTime: new Date(),
+      },
       type: 'LED',
       location: {
         floor: 1,
         section: 'North Wing',
         area: 'Reception',
       },
+      cilLevel: 1,
     };
 
     // Update currentStatus and predictiveStatus on the new asset

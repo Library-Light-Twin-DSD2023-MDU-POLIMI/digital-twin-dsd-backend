@@ -6,7 +6,7 @@ import resolvers from '../resolvers/resolvers';
 
 const mockInput: IAddLightingAssetInput = {
   uid: uuidv4(), // Generates a unique UUID each time
-  currentStatus: 'good',
+  currentStatus: 'GOOD',
   predictiveStatus: {
     status: 'OKAY',
     predictedTime: new Date(),

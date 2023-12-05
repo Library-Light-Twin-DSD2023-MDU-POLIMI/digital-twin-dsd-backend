@@ -233,6 +233,7 @@ const resolvers = {
         throw new GraphQLError('Was not able to update lighting asset');
       }
     },
+
     async removeLightingAsset(_: unknown, { ID }: { ID: string }) {
       try {
         const result = (await LightingAsset.deleteOne({ _id: ID }))

@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const mockInput: IAddLightingAssetInput = {
   uid: uuidv4(), // Generates a unique UUID each time
-  currentStatus: 'good',
+  currentStatus: 'GOOD',
   predictiveStatus: {
     status: 'OKAY',
     predictedTime: new Date(),
@@ -26,7 +26,7 @@ const mockInput: IAddLightingAssetInput = {
 describe('removeLightingAsset Resolver', () => {
   beforeAll(async () => {
     const connectionString =
-      'mongodb+srv://application:lol@dsd.iaano1k.mongodb.net/';
+      'mongodb+srv://application:lol@dsd.iaano1k.mongodb.net/test';
     await mongoose.connect(connectionString, {});
   });
 

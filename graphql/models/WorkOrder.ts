@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { ILightingAsset } from './LightingAsset';
 
-export type WorkOrderStatus = 'scheduled' | 'completed' | 'notCompleted';
+export type WorkOrderStatus = 'SCHEDULED' | 'COMPLETED' | 'NOTCOMPLETED';
 export type WorkOrderType = 'CM' | 'PM' | 'PDM'; // New type for work order types
 
 export interface IWorkOrder extends Document {
@@ -34,7 +34,7 @@ const workOrderSchema = new Schema<IWorkOrder>({
   },
   workOrderStatus: {
     type: String,
-    enum: ['scheduled', 'completed', 'notCompleted'],
+    enum: ['SCHEDULED', 'COMPLETED', 'NOTCOMPLETED'],
     required: true,
   },
   description: { type: String, required: true },
