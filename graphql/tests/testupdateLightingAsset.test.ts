@@ -53,11 +53,10 @@ describe('updateLightingAsset Resolver', () => {
     };
 
     // Update currentStatus and predictiveStatus on the new asset
-    const updatedAsset =
-      await resolvers.Mutations.LightingAsset.updateLightingAsset(null, {
-        ID: result._id,
-        input: updateData,
-      });
+    const updatedAsset = await resolvers.Mutations.updateLightingAsset(null, {
+      ID: result._id,
+      input: updateData,
+    });
 
     expect(updatedAsset).toBeDefined();
     expect(updatedAsset?.currentStatus).toBe('warning');

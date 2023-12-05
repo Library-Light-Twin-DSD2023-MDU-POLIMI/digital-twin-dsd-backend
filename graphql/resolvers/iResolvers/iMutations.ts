@@ -24,14 +24,15 @@ export interface IAddLightingAssetInput {
 
 export interface IUpdateLightingAssetInput {
   uid: string;
-  currentStatus: CurrentStatus;
-  predictiveStatus: PredictiveStatus;
-  type: LightingType;
-  location: {
+  currentStatus?: CurrentStatus;
+  predictiveStatus?: PredictiveStatus;
+  type?: LightingType;
+  location?: {
     floor: number;
     section: string;
     area: string;
   };
+  cilLevel?: 1 | 2;
 }
 
 export interface ILightingAssetMeasurementInput {
