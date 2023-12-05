@@ -1,5 +1,18 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
+export interface IMetricMetaData extends Document {
+  metric: string;
+  unit: string;
+  information: string;
+  tooltipSummary: string;
+  scale: {
+    tooHigh: string;
+    perfect: string;
+    good: string;
+    mid: string;
+    tooLow: string;
+  };
+}
 const scaleSchema = new mongoose.Schema({
   tooHigh: { type: String },
   perfect: { type: String },
@@ -31,6 +44,9 @@ const metricSchema = new mongoose.Schema({
   tooltipSummary: { type: String, required: true },
 });
 
-const MetricMetaData = mongoose.model('MetricMetaData', metricSchema);
+const MetricMetaData = mongoose.model<IMetricMetaData>(
+  'MetricMetaData',
+  metricSchema
+);
 
-module.exports = MetricMetaData;
+export default MetricMetaData;
