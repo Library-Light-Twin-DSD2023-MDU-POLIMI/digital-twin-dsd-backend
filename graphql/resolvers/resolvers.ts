@@ -6,6 +6,7 @@ import {
   LightingAssetTimeSeriesData,
   WorkOrder,
 } from '../models/index';
+import MetricMetaData from '../models/MetricMetaData';
 
 import {
   IAddLightingAssetInput,
@@ -298,8 +299,11 @@ const resolvers = {
       }
     },
 
-    async updateMetric(_: unknown, args: { input: IUpdateMetricMetaData }) {
-      const { metric, unit, information, tooltipSummary } = args.input;
+    async updateMetric(
+      _: unknown,
+      args: { ID: string; input: IUpdateMetricMetaData }
+    ) {
+      const { metric, unit, information, tooltipSummary, scale } = args.input;
 
       // Construct an update object with only defined fields using object spread syntax
       const updateData: IUpdateMetricMetaData = {
@@ -307,20 +311,29 @@ const resolvers = {
         ...(unit !== undefined && { unit }),
         ...(information !== undefined && { information }),
         ...(tooltipSummary !== undefined && { tooltipSummary }),
+        ...(scale !== undefined && { scale }),
       };
 
       // Check if there's something to update other than the metric itself
       if (Object.keys(updateData).length > 1) {
+        console.log('updateData: ', updateData);
         // '1' accounts for the 'metric' field
-        return await MetricMetaData.findOneAndUpdate({ metric }, updateData, {
+        return await MetricMetaData.findByIdAndUpdate(args.ID, updateData, {
           new: true,
         });
       } else {
         throw new Error('No valid fields provided for update.');
       }
     },
-    async removeMetric(_: unknown, { metric }: { metric: string }) {
-      return await MetricMetaData.findOneAndDelete({ metric });
+    async removeMetric(_: unknown, { ID }: { ID: string }) {
+      try {
+        const result = (await MetricMetaData.deleteOne({ _id: ID }))
+          .deletedCount;
+        return result > 0;
+      } catch (error) {
+        console.error('Error in removeMetric: ', error);
+        throw new GraphQLError('Was not able to remove metric');
+      }
     },
 
     async addWorkOrder(_: unknown, args: { input: IAddWorkOrderInput }) {
