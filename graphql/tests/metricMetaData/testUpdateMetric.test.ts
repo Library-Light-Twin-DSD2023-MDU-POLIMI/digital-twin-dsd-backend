@@ -1,9 +1,6 @@
 import mongoose from 'mongoose';
-import {
-  IAddMetricMetaData,
-  IUpdateMetricMetaData,
-} from '../resolvers/iResolvers/iMutations';
-import resolvers from '../resolvers/resolvers';
+import { IAddMetricMetaData } from '../../resolvers/iResolvers/iMutations';
+import resolvers from '../../resolvers/resolvers';
 
 const mockAddInput: IAddMetricMetaData = {
   metric: 'maintainedAverage',

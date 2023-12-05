@@ -75,6 +75,13 @@ export interface IAddMetricMetaData {
   unit: string;
   information: string;
   tooltipSummary: string;
+  scale: {
+    tooHigh: string;
+    perfect: string;
+    good: string;
+    mid: string;
+    tooLow: string;
+  };
 }
 
 export interface IUpdateMetricMetaData {
@@ -82,6 +89,13 @@ export interface IUpdateMetricMetaData {
   unit?: string;
   information?: string;
   tooltipSummary?: string;
+  scale: {
+    tooHigh: string;
+    perfect: string;
+    good: string;
+    mid: string;
+    tooLow: string;
+  };
 }
 
 export interface IAddWorkOrderInput {
