@@ -1,7 +1,6 @@
 import { gql } from 'apollo-server-lambda';
 const typeDefs = gql`
   #LightingAsset
-
   type LightingAsset {
     _id: ID!
     uid: String!
@@ -33,9 +32,6 @@ const typeDefs = gql`
     LED
     OTHER
   }
-  enum cilLevel {
-    
-  }
 
   input SortAndPaginate {
     limit: Int!
@@ -47,7 +43,7 @@ const typeDefs = gql`
     location: Location
     lightingType: LightingType
     currentStatus: CurrentStatus
-    predictedStatus: PredictiveStatus
+    predictedStatus: PredictedStatusType
   }
 
   #Location
@@ -61,6 +57,7 @@ const typeDefs = gql`
   type LightingAssetTimeSeriesData {
     timestamp: String!
     assetId: ID!
+    power: Power
     illuminance: Illuminance
     glare: Glare
     colorRendering: ColorRendering
@@ -70,17 +67,26 @@ const typeDefs = gql`
     photobiologicalSafety: PhotobiologicalSafety
   }
 
+  #Power
+  type Power {
+    WATT: WATT
+  }
 
-#Illuminance
+  type WATT {
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of Watt
+  }
+
+  #Illuminance
   type Illuminance {
     maintainedAverage: MaintainedAverage
     uniformityRatio: UniformityRatio
   }
 
   type MaintainedAverage {
-  value: Float
-  healthStatus: Int # Number from 1-5, indicating the health status of maintainedAverage
-}
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of maintainedAverage
+  }
 
   type UniformityRatio {
     value: Float
@@ -88,7 +94,6 @@ const typeDefs = gql`
   }
 
   #Glare
-
   type Glare {
     UGR: UGR
   }
@@ -108,7 +113,7 @@ const typeDefs = gql`
     healthStatus: Int # Number from 1-5, indicating the health status of CRI
   }
 
-  #ColorTemperature 
+  #ColorTemperature
   type ColorTemperature {
     CCT: CCT
     Duv: Duv
@@ -167,35 +172,35 @@ const typeDefs = gql`
 
   #MetricMetaData
   type Metric {
-  metric: String!
-  unit: String!
-  scale: Scale
-  information: String
-  tooltipSummary: String
-}
+    metric: String!
+    unit: String!
+    scale: Scale
+    information: String
+    tooltipSummary: String
+  }
 
-type Scale {
-  tooHigh: String
-  perfect: String
-  good: String
-  mid: String
-  tooLow: String
-}
+  type Scale {
+    tooHigh: String
+    perfect: String
+    good: String
+    mid: String
+    tooLow: String
+  }
 
   #WorkOrder
   type WorkOrder {
-  _id: ID!
-  workOrderID: String!
-  lightingAssetID: ID!
-  type: WorkOrderType!
-  workOrderStatus: WorkOrderStatus!
-  description: String!
-  comment: String
-  location: Location!
-  dateOfMaintenance: String!
-  excecutionStartDate: String
-  excecutedDate: String
-}
+    _id: ID!
+    workOrderID: String!
+    lightingAssetID: ID!
+    type: WorkOrderType!
+    workOrderStatus: WorkOrderStatus!
+    description: String!
+    comment: String
+    location: Location!
+    dateOfMaintenance: String!
+    executionStartDate: String
+    executedDate: String
+  }
 
   enum WorkOrderType {
     CM
@@ -233,6 +238,7 @@ type Scale {
   input LightingAssetMeasurementInput {
     assetId: ID!
     timestamp: String!
+    power: Power
     illuminance: Illuminance
     glare: Glare
     colorRendering: ColorRendering
@@ -253,6 +259,7 @@ type Scale {
   }
 
   input TimeSeriesDataThresholds {
+    power: ThresholdInput
     illuminance: ThresholdInput
     glare: ThresholdInput
     colorRendering: ThresholdInput
@@ -262,53 +269,51 @@ type Scale {
     photobiologicalSafety: ThresholdInput
   }
 
+  # Input types and enums for MetricMetaData
 
-# Input types and enums for MetricMetaData
+  input MetricMetaDataInput {
+    metric: String!
+    unit: String!
+    scale: ScaleInput
+    information: String
+    tooltipSummary: String
+  }
 
-input MetricMetaDataInput {
-  metric: String!
-  unit: String!
-  scale: ScaleInput
-  information: String
-  tooltipSummary: String
-}
+  input ScaleInput {
+    tooHigh: String
+    perfect: String
+    good: String
+    mid: String
+    tooLow: String
+  }
 
-input ScaleInput {
-  tooHigh: String
-  perfect: String
-  good: String
-  mid: String
-  tooLow: String
-}
+  # Input types and enums for WorkOrder
 
-# Input types and enums for WorkOrder
+  input AddWorkOrderInput {
+    workOrderID: String!
+    lightingAssetID: ID!
+    type: WorkOrderType!
+    workOrderStatus: WorkOrderStatus!
+    description: String!
+    comment: String
+    location: Location!
+    dateOfMaintenance: String!
+    excecutionStartDate: String
+    excecutedDate: String
+  }
 
-input AddWorkOrderInput {
-  workOrderID: String!
-  lightingAssetID: ID!
-  type: WorkOrderType!
-  workOrderStatus: WorkOrderStatus!
-  description: String!
-  comment: String
-  location: Location!
-  dateOfMaintenance: String!
-  excecutionStartDate: String
-  excecutedDate: String
-}
-
-
-input UpdateWorkOrderInput {
-  workOrderID: String
-  lightingAssetID: ID
-  type: WorkOrderType
-  workOrderStatus: WorkOrderStatus
-  description: String
-  comment: String
-  location: Location
-  dateOfMaintenance: String
-  excecutionStartDate: String
-  excecutedDate: String
-}
+  input UpdateWorkOrderInput {
+    workOrderID: String
+    lightingAssetID: ID
+    type: WorkOrderType
+    workOrderStatus: WorkOrderStatus
+    description: String
+    comment: String
+    location: Location
+    dateOfMaintenance: String
+    excecutionStartDate: String
+    excecutedDate: String
+  }
 
   type Query {
     lightingAsset(id: ID!): LightingAsset
@@ -335,7 +340,7 @@ input UpdateWorkOrderInput {
 
   type Mutations {
     addLightingAsset(input: AddLightingAssetInput): LightingAsset
-    updateLightingAsset(id: ID!, newStatus: CurrentStatus!): LightingAsset
+    updateLightingAsset(id: ID!, input: UpdateLightingAssetInput): LightingAsset
     removeLightingAsset(id: ID!): Boolean
     addWorkOrder(input: AddWorkOrderInput!): WorkOrder
     removeWorkOrder(id: ID!): Boolean

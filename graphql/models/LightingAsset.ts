@@ -7,9 +7,9 @@ export interface Location {
   area: string;
 }
 
-export type CurrentStatus = 'good' | 'warning' | 'broken';
-export type PredictiveStatus = 'okay' | 'warning';
-export type LightingType = 'LED' | 'Other';
+export type CurrentStatus = 'GOOD' | 'WARNING' | 'BROKEN';
+export type PredictiveStatus = 'OKAY' | 'WARNING';
+export type LightingType = 'LED' | 'OTHER';
 
 const PredictiveStatusTypeSchema = new Schema({
   status: { type: String, enum: ['OKAY', 'WARNING'], required: true },
@@ -32,11 +32,11 @@ const lightingAssetSchema = new Schema<ILightingAsset>({
   uid: { type: String, required: true, unique: true },
   currentStatus: {
     type: String,
-    enum: ['good', 'warning', 'broken'],
+    enum: ['GOOD', 'WARNING', 'BROKEN'],
     required: true,
   },
   predictiveStatus: { type: PredictiveStatusTypeSchema, required: true },
-  type: { type: String, enum: ['LED', 'Other'], required: true },
+  type: { type: String, enum: ['LED', 'OTHER'], required: true },
   cilLevel: { type: Number, enum: [1, 2], required: true },
   location: {
     floor: { type: Number, required: true },

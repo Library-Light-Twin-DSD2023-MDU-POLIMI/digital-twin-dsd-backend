@@ -25,9 +25,7 @@ import {
 
 const resolvers = {
   Query: {
-    //LightingAsset: {
     async lightingAsset(_: unknown, { ID }: { ID: string }) {
-      // Implement logic to fetch a lighting asset based on provided args
       // args.input can be used for sorting and pagination
       return await LightingAsset.findById(ID);
     },
@@ -41,8 +39,6 @@ const resolvers = {
         : LightingAsset.find();
 
       // Apply filters
-
-      //Location is not finished
       if (args.filter) {
         if (args.filter.floor) {
           query = query.where('location.floor').equals(args.filter.floor);
@@ -78,9 +74,7 @@ const resolvers = {
       // Execute and return the query
       return await query.exec();
     },
-    //},
 
-    //LightingAssetTimeSeriesData: {
     async getLightingAssetTimeSeriesData(
       _: any,
       args: {
@@ -193,17 +187,13 @@ const resolvers = {
         averagePhotobiologicalSafety: item.averagePhotobiologicalSafety,
       }));
     },
-    //},
-
-    //MetricMetadata: {
     async metrics() {
       return await MetricMetaData.find();
     },
     async metric(_: unknown, { metric }: { metric: string }) {
       return await MetricMetaData.findOne({ metric });
     },
-    //}
-    //WorkOrder: {
+
     async workOrder(_: unknown, { ID }: { ID: string }) {
       return await WorkOrder.findById(ID);
     },
@@ -211,12 +201,9 @@ const resolvers = {
     async workOrders(_: unknown) {
       return await WorkOrder.find();
     },
-    //},
   },
 
   Mutations: {
-    //LightingAsset: {
-
     async addLightingAsset(
       _: unknown,
       args: { input: IAddLightingAssetInput }
@@ -254,6 +241,7 @@ const resolvers = {
         throw new GraphQLError('Was not able to update lighting asset');
       }
     },
+
     async removeLightingAsset(_: unknown, { ID }: { ID: string }) {
       try {
         const result = (await LightingAsset.deleteOne({ _id: ID }))
@@ -264,10 +252,7 @@ const resolvers = {
         throw new GraphQLError('Was not able to remove lighting asset');
       }
     },
-    //},
 
-    //When testing make sure the the date is in the correct format
-    //LightingAssetTimeSeriesData: {
     async addLightingAssetMeasurements(
       _: unknown,
       args: { input: ILightingAssetMeasurementInput[] }
@@ -279,7 +264,8 @@ const resolvers = {
             metaData: {
               assetId: new mongoose.Types.ObjectId(assetId),
             },
-            timpstamp: new Date(timestamp),
+
+            timestamp: new Date(timestamp),
             ...otherMeasurements,
           };
         });
@@ -295,9 +281,6 @@ const resolvers = {
         );
       }
     },
-    //},
-
-    // MetricMetaData: {
 
     async addMetric(_: unknown, args: { input: IAddMetricMetaData }) {
       // Check if the metric already exists
@@ -339,9 +322,7 @@ const resolvers = {
     async removeMetric(_: unknown, { metric }: { metric: string }) {
       return await MetricMetaData.findOneAndDelete({ metric });
     },
-    //}
 
-    // WorkOrder: {
     async addWorkOrder(_: unknown, args: { input: IAddWorkOrderInput }) {
       try {
         // Create and save the new WorkOrder
@@ -417,7 +398,6 @@ const resolvers = {
         throw new GraphQLError('Was not able to remove work order');
       }
     },
-    //},
   },
 };
 export default resolvers;

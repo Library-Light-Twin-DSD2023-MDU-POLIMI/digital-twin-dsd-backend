@@ -17,6 +17,9 @@ export interface ILightingAssetTimeSeriesData extends Document {
   timestamp: Date;
   metaData: Object;
   assetId: ILightingAsset['_id'];
+  power?: {
+    WATT?: typeof metricSchema;
+  };
   illuminance?: {
     maintainedAverage?: typeof metricSchema;
     uniformityRatio?: typeof metricSchema;
@@ -52,6 +55,9 @@ const lightingAssetTimeSeriesDataSchema =
           ref: 'LightingAsset',
           required: true,
         },
+      },
+      power: {
+        WATT: metricSchema,
       },
       illuminance: {
         maintainedAverage: metricSchema,

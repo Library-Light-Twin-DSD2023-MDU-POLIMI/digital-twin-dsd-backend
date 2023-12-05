@@ -5,12 +5,13 @@ import {
   Location,
   WorkOrderStatus,
 } from '../../models/index';
+import { WorkOrderType } from '../../models/WorkOrder';
 
 export interface IAddLightingAssetInput {
   uid: string;
   currentStatus: CurrentStatus;
   predictiveStatus: {
-    status: 'OKAY' | 'WARNING';
+    status: PredictiveStatus;
     predictedTime: Date;
   };
   type: LightingType;
@@ -25,18 +26,25 @@ export interface IAddLightingAssetInput {
 export interface IUpdateLightingAssetInput {
   uid: string;
   currentStatus?: CurrentStatus;
-  predictiveStatus?: PredictiveStatus;
+  predictiveStatus?: {
+    status: PredictiveStatus;
+    predictedTime: Date;
+  };
   type?: LightingType;
   location?: {
     floor: number;
     section: string;
     area: string;
   };
+  cilLevel?: 1 | 2;
 }
 
 export interface ILightingAssetMeasurementInput {
   assetId: string;
   timestamp: string;
+  power?: {
+    WATT?: { value: number };
+  };
   illuminance?: {
     maintainedAverage?: { value: number };
     uniformityRatio?: { value: number };
@@ -84,13 +92,18 @@ export interface IAddWorkOrderInput {
   comment: string;
   location: Location;
   dateOfMaintenance: Date;
+  executionStartDate: Date;
+  executedDate: Date;
 }
 export interface IUpdateWorkOrderInput {
   workOrderID: string;
   lightingAssetID: string;
-  workOrderStatus?: WorkOrderStatus;
-  description?: string;
-  comment?: string;
-  location?: Location;
-  dateOfMaintenance?: Date;
+  type: WorkOrderType;
+  workOrderStatus: WorkOrderStatus;
+  description: string;
+  comment: string;
+  location: Location;
+  dateOfMaintenance: Date;
+  executionStartDate: Date;
+  executedDate: Date;
 }
