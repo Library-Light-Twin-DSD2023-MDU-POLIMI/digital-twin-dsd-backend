@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import { MetricMetaData } from '../models'; // Model
-import { IAddMetricMetaData } from '../resolvers/iResolvers/iMutations';
-import resolvers from '../resolvers/resolvers';
+import MetricMetaData from '../../models/MetricMetaData';
+import { IAddMetricMetaData } from '../../resolvers/iResolvers/iMutations';
+import resolvers from '../../resolvers/resolvers';
 
 const mockInput: IAddMetricMetaData = {
   metric: 'maintainedAverage',
@@ -19,7 +19,8 @@ const mockInput: IAddMetricMetaData = {
 
 describe('addMetric Resolver', () => {
   beforeAll(async () => {
-    const connectionString = process.env.TEST_DB_CONNECTION_STRING;
+    const connectionString =
+      'mongodb+srv://application:lol@dsd.iaano1k.mongodb.net/test';
     if (!connectionString)
       throw new Error('TEST_DB_CONNECTION_STRING not defined');
     await mongoose.connect(connectionString, {});
@@ -30,7 +31,7 @@ describe('addMetric Resolver', () => {
   });
 
   test('should add a new metric', async () => {
-    const result = await resolvers.Mutation.addMetric(null, {
+    const result = await resolvers.Mutations.addMetric(null, {
       input: mockInput,
     });
 

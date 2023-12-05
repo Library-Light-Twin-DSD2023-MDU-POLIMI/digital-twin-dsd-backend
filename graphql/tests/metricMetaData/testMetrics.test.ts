@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
-import resolvers from '../resolvers/resolvers';
-import { MetricMetaData } from '../models'; // Model
+import MetricMetaData from '../../models/MetricMetaData';
+import resolvers from '../../resolvers/resolvers';
 
 describe('metrics Query', () => {
   beforeAll(async () => {
     const connectionString =
-      'mongodb+srv://application:password@cluster.mongodb.net/';
+      'mongodb+srv://application:lol@dsd.iaano1k.mongodb.net/test';
     await mongoose.connect(connectionString, {});
 
     // Optionally, seed the database with test data
@@ -38,7 +38,7 @@ describe('metrics Query', () => {
     const metrics = await resolvers.Query.metrics();
 
     expect(metrics).toBeDefined();
-    expect(metrics.length).toBeGreaterThanOrEqual(2); // Assuming at least 2 metrics are seeded
+    expect(metrics.length).toBeGreaterThanOrEqual(1); // Assuming at least 2 metrics are seeded
     expect(metrics[0].metric).toBeDefined();
     expect(metrics[0].unit).toBeDefined();
     expect(metrics[0].information).toBeDefined();

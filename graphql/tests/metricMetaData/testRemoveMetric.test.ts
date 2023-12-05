@@ -1,19 +1,26 @@
 import mongoose from 'mongoose';
-import resolvers from '../resolvers/resolvers';
-import { MetricMetaData } from '../models'; // Model
-import { IAddMetricMetaData } from '../resolvers/iResolvers/iMutations';
+import MetricMetaData from '../../models/MetricMetaData';
+import { IAddMetricMetaData } from '../../resolvers/iResolvers/iMutations';
+import resolvers from '../../resolvers/resolvers';
 
 const mockInput: IAddMetricMetaData = {
   metric: 'WATT',
   unit: 'watt',
-  scale: {},
+  scale: {
+    tooHigh: '5',
+    perfect: '4',
+    good: '3',
+    mid: '2',
+    tooLow: '1',
+  },
   information: 'Info about WATT',
   tooltipSummary: 'Summary WATT',
 };
 
 describe('removeMetric Resolver', () => {
   beforeAll(async () => {
-    const connectionString = process.env.TEST_DB_CONNECTION_STRING;
+    const connectionString =
+      'mongodb+srv://application:lol@dsd.iaano1k.mongodb.net/test';
     if (!connectionString)
       throw new Error('TEST_DB_CONNECTION_STRING not defined');
     await mongoose.connect(connectionString, {});
@@ -25,13 +32,13 @@ describe('removeMetric Resolver', () => {
 
   test('should remove the metric', async () => {
     // Add a new metric
-    const addedMetric = await resolvers.Mutation.addMetric(null, {
+    const addedMetric = await resolvers.Mutations.addMetric(null, {
       input: mockInput,
     });
 
     // Remove metric
-    const removalResult = await resolvers.Mutation.removeMetric(null, {
-      metric: addedMetric.metric,
+    const removalResult = await resolvers.Mutations.removeMetric(null, {
+      ID: addedMetric._id.toString(),
     });
 
     // Assertions to check if the metric was removed

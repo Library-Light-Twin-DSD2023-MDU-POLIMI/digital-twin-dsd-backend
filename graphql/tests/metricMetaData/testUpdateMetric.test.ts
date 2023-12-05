@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
-import { IAddMetricMetaData } from '../../resolvers/iResolvers/iMutations';
+import {
+  IAddMetricMetaData,
+  IUpdateMetricMetaData,
+} from '../../resolvers/iResolvers/iMutations';
 import resolvers from '../../resolvers/resolvers';
 
 const mockAddInput: IAddMetricMetaData = {
@@ -18,9 +21,8 @@ const mockAddInput: IAddMetricMetaData = {
 
 describe('updateMetric Resolver', () => {
   beforeAll(async () => {
-    const connectionString = process.env.TEST_DB_CONNECTION_STRING;
-    if (!connectionString)
-      throw new Error('TEST_DB_CONNECTION_STRING not defined');
+    const connectionString =
+      'mongodb+srv://application:lol@dsd.iaano1k.mongodb.net/test';
     await mongoose.connect(connectionString, {});
   });
 
@@ -30,7 +32,7 @@ describe('updateMetric Resolver', () => {
 
   test('should update the metric', async () => {
     // Add a new metric
-    const addedMetric = await resolvers.Mutation.addMetric(null, {
+    const addedMetric = await resolvers.Mutations.addMetric(null, {
       input: mockAddInput,
     });
 
@@ -42,10 +44,11 @@ describe('updateMetric Resolver', () => {
     };
 
     // Update unit and scale of the new metric
-    const updatedMetric = await resolvers.Mutation.updateMetric(null, {
+    const updatedMetric = await resolvers.Mutations.updateMetric(null, {
+      ID: addedMetric._id.toString(),
       input: updateData,
     });
-
+    if (!updatedMetric) throw new Error('updatedMetric is undefined');
     expect(updatedMetric).toBeDefined();
     expect(updatedMetric.unit).toBe('kilowatt');
     expect(updatedMetric.scale.good).toBe('3.5');

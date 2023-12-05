@@ -22,7 +22,8 @@ const mockInput: IAddLightingAssetInput = {
 
 describe('removeLightingAsset Resolver', () => {
   beforeAll(async () => {
-    const connectionString = process.env.TEST_DB_CONNECTION_STRING ?? '';
+    const connectionString =
+      'mongodb+srv://application:lol@dsd.iaano1k.mongodb.net/test';
     await mongoose.connect(connectionString, {});
   });
 
