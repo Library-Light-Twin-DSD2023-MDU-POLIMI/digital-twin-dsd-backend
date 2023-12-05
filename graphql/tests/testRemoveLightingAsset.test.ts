@@ -1,11 +1,8 @@
 import mongoose from 'mongoose';
-import resolvers from '../resolvers/resolvers';
-import { LightingAsset } from '../models'; // Model
-import {
-  IAddLightingAssetInput,
-  IUpdateLightingAssetInput,
-} from '../resolvers/iResolvers/iMutations';
 import { v4 as uuidv4 } from 'uuid';
+import { LightingAsset } from '../models'; // Model
+import { IAddLightingAssetInput } from '../resolvers/iResolvers/iMutations';
+import resolvers from '../resolvers/resolvers';
 
 const mockInput: IAddLightingAssetInput = {
   uid: uuidv4(), // Generates a unique UUID each time
@@ -25,8 +22,7 @@ const mockInput: IAddLightingAssetInput = {
 
 describe('removeLightingAsset Resolver', () => {
   beforeAll(async () => {
-    const connectionString =
-      'mongodb+srv://application:lol@dsd.iaano1k.mongodb.net/test';
+    const connectionString = process.env.TEST_DB_CONNECTION_STRING ?? '';
     await mongoose.connect(connectionString, {});
   });
 
