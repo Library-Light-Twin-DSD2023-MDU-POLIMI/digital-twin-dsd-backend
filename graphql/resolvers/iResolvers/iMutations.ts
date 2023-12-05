@@ -4,13 +4,18 @@ import {
   PredictiveStatus,
   Location,
   WorkOrderStatus,
-} from "../../models/index";
+} from '../../models/index';
+import { WorkOrderType } from '../../models/WorkOrder';
 
 export interface IAddLightingAssetInput {
   uid: string;
   currentStatus: CurrentStatus;
-  predictiveStatus: PredictiveStatus;
+  predictiveStatus: {
+    status: PredictiveStatus;
+    predictedTime: Date;
+  };
   type: LightingType;
+  cilLevel: 1 | 2;
   location: {
     floor: number;
     section: string;
@@ -20,41 +25,48 @@ export interface IAddLightingAssetInput {
 
 export interface IUpdateLightingAssetInput {
   uid: string;
-  currentStatus: CurrentStatus;
-  predictiveStatus: PredictiveStatus;
-  type: LightingType;
-  location: {
+  currentStatus?: CurrentStatus;
+  predictiveStatus?: {
+    status: PredictiveStatus;
+    predictedTime: Date;
+  };
+  type?: LightingType;
+  location?: {
     floor: number;
     section: string;
     area: string;
   };
+  cilLevel?: 1 | 2;
 }
 
 export interface ILightingAssetMeasurementInput {
   assetId: string;
   timestamp: string;
+  power?: {
+    WATT?: { value: number };
+  };
   illuminance?: {
-    maintainedAverage?: number;
-    uniformityRatio?: number;
+    maintainedAverage?: { value: number };
+    uniformityRatio?: { value: number };
   };
   glare?: {
-    UGR?: number;
+    UGR?: { value: number };
   };
   colorRendering?: {
-    CRI?: number;
+    CRI?: { value: number };
   };
   colorTemperature?: {
-    CCT?: number;
-    Duv?: number;
+    CCT?: { value: number };
+    Duv?: { value: number };
   };
   flicker?: {
-    SVM?: number;
+    SVM?: { value: number };
   };
   colorPreference?: {
-    PVF?: number;
+    PVF?: { value: number };
   };
   photobiologicalSafety?: {
-    UV?: number;
+    UV?: { value: number };
   };
 }
 
@@ -66,13 +78,18 @@ export interface IAddWorkOrderInput {
   comment: string;
   location: Location;
   dateOfMaintenance: Date;
+  executionStartDate: Date;
+  executedDate: Date;
 }
 export interface IUpdateWorkOrderInput {
   workOrderID: string;
   lightingAssetID: string;
+  type: WorkOrderType;
   workOrderStatus: WorkOrderStatus;
   description: string;
   comment: string;
   location: Location;
   dateOfMaintenance: Date;
+  executionStartDate: Date;
+  executedDate: Date;
 }

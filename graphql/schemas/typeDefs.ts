@@ -1,26 +1,31 @@
-import { gql } from "apollo-server-lambda";
+import { gql } from 'apollo-server-lambda';
 const typeDefs = gql`
   #LightingAsset
-
   type LightingAsset {
     _id: ID!
     uid: String!
     currentStatus: CurrentStatus!
-    predictiveStatus: PredictiveStatus!
+    predictiveStatus: PredictiveStatusType!
     type: LightingType!
     location: Location!
     workOrders: [WorkOrder]
+    cilLevel: Int!
+  }
+
+  #Predicted type
+  type PredictedStatusType {
+    status: PredictiveStatus!
+    predictedTime: String!
+  }
+  enum PredictiveStatus {
+    OKAY
+    WARNING
   }
 
   enum CurrentStatus {
     GOOD
     WARNING
     BROKEN
-  }
-
-  enum PredictiveStatus {
-    OKAY
-    WARNING
   }
 
   enum LightingType {
@@ -38,7 +43,7 @@ const typeDefs = gql`
     location: Location
     lightingType: LightingType
     currentStatus: CurrentStatus
-    predictedStatus: PredictiveStatus
+    predictedStatus: PredictedStatusType
   }
 
   #Location
@@ -52,6 +57,7 @@ const typeDefs = gql`
   type LightingAssetTimeSeriesData {
     timestamp: String!
     assetId: ID!
+    power: Power
     illuminance: Illuminance
     glare: Glare
     colorRendering: ColorRendering
@@ -61,34 +67,96 @@ const typeDefs = gql`
     photobiologicalSafety: PhotobiologicalSafety
   }
 
+  #Power
+  type Power {
+    WATT: WATT
+  }
+
+  type WATT {
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of Watt
+  }
+
+  #Illuminance
   type Illuminance {
-    maintainedAverage: Float
-    uniformityRatio: Float
+    maintainedAverage: MaintainedAverage
+    uniformityRatio: UniformityRatio
   }
 
+  type MaintainedAverage {
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of maintainedAverage
+  }
+
+  type UniformityRatio {
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of uniformityRatio
+  }
+
+  #Glare
   type Glare {
-    UGR: Float
+    UGR: UGR
   }
 
+  type UGR {
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of UGR
+  }
+
+  # ColorRendering
   type ColorRendering {
-    CRI: Float
+    CRI: CRI
   }
 
+  type CRI {
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of CRI
+  }
+
+  #ColorTemperature
   type ColorTemperature {
-    CCT: Float
-    Duv: Float
+    CCT: CCT
+    Duv: Duv
   }
 
+  type CCT {
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of CCT
+  }
+
+  type Duv {
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of Duv
+  }
+
+  #Flicker
   type Flicker {
-    SVM: Float
+    SVM: SVM
   }
 
+  type SVM {
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of SVM
+  }
+
+  #ColorPreference
   type ColorPreference {
-    PVF: Float
+    PVF: PVF
   }
 
+  type PVF {
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of PVF
+  }
+
+  #PhotobiologicalSafety
   type PhotobiologicalSafety {
-    UV: Float
+    UV: PhotobiologicalSafetyUV
+  }
+
+  type PhotobiologicalSafetyUV {
+    value: Float
+    healthStatus: Int # Number from 1-5, indicating the health status of UV
   }
 
   type LightingAssetAverageData {
@@ -107,11 +175,20 @@ const typeDefs = gql`
     _id: ID!
     workOrderID: String!
     lightingAssetID: ID!
+    type: WorkOrderType!
     workOrderStatus: WorkOrderStatus!
     description: String!
     comment: String
     location: Location!
     dateOfMaintenance: String!
+    executionStartDate: String
+    executedDate: String
+  }
+
+  enum WorkOrderType {
+    CM
+    PM
+    PDM
   }
 
   enum WorkOrderStatus {
@@ -127,7 +204,7 @@ const typeDefs = gql`
   input AddLightingAssetInput {
     uid: String!
     currentStatus: CurrentStatus!
-    predictiveStatus: PredictiveStatus
+    predictiveStatus: PredictiveStatusType
     type: LightingType!
     location: Location!
   }
@@ -135,7 +212,7 @@ const typeDefs = gql`
   input UpdateLightingAssetInput {
     uid: String!
     currentStatus: CurrentStatus
-    predictiveStatus: PredictiveStatus
+    predictiveStatus: PredictiveStatusType
     location: Location
   }
 
@@ -144,6 +221,7 @@ const typeDefs = gql`
   input LightingAssetMeasurementInput {
     assetId: ID!
     timestamp: String!
+    power: Power
     illuminance: Illuminance
     glare: Glare
     colorRendering: ColorRendering
@@ -164,6 +242,7 @@ const typeDefs = gql`
   }
 
   input TimeSeriesDataThresholds {
+    power: ThresholdInput
     illuminance: ThresholdInput
     glare: ThresholdInput
     colorRendering: ThresholdInput
@@ -178,21 +257,27 @@ const typeDefs = gql`
   input AddWorkOrderInput {
     workOrderID: String!
     lightingAssetID: ID!
+    type: WorkOrderType!
     workOrderStatus: WorkOrderStatus!
     description: String!
     comment: String
     location: Location!
     dateOfMaintenance: String!
+    excecutionStartDate: String
+    excecutedDate: String
   }
 
   input UpdateWorkOrderInput {
-    workOrderID: String!
-    lightingAssetID: ID!
+    workOrderID: String
+    lightingAssetID: ID
+    type: WorkOrderType
     workOrderStatus: WorkOrderStatus
     description: String
     comment: String
     location: Location
     dateOfMaintenance: String
+    excecutionStartDate: String
+    excecutedDate: String
   }
 
   type Query {
@@ -218,7 +303,7 @@ const typeDefs = gql`
 
   type Mutations {
     addLightingAsset(input: AddLightingAssetInput): LightingAsset
-    updateLightingAsset(id: ID!, newStatus: CurrentStatus!): LightingAsset
+    updateLightingAsset(id: ID!, input: UpdateLightingAssetInput): LightingAsset
     removeLightingAsset(id: ID!): Boolean
     addWorkOrder(input: AddWorkOrderInput!): WorkOrder
     removeWorkOrder(id: ID!): Boolean
