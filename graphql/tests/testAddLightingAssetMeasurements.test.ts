@@ -11,8 +11,9 @@ for (let i = 0; i < 20; i++) {
   // Create a new Date object from the current date
   const timestamp = new Date(currentDate.getTime());
 
-  // Add 2.4 hours multiplied by the iterator to the current date
-  timestamp.setHours(currentDate.getHours() + 2.4 * i);
+  // Add 20 minutes multiplied by the iterator to the current date
+  // 20 minutes = 1/3 of an hour, for 3 measurements per hour
+  timestamp.setMinutes(currentDate.getMinutes() + 20 * i);
 
   // Pushing a new mock data object into the mockInput array
   mockInput.push({
@@ -43,7 +44,7 @@ describe("addLightingAssetMeasurements Resolver", () => {
     await mongoose.connection.close();
   });
 
-  test("should add 20 new lighting asset measurement", async () => {
+  test("should add 20 new lighting asset measurements", async () => {
     // Inserting the mock data into the database
     const insertionResult = await resolvers.Mutations.LightingAssetTimeSeriesData.addLightingAssetMeasurements(
       null,
