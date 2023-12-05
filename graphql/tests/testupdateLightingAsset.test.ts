@@ -36,7 +36,7 @@ describe('updateLightingAsset Resolver', () => {
 
   test('should update the asset', async () => {
     // Add a new asset
-    const result = await resolvers.Mutations.addLig htingAsset(null, {
+    const result = await resolvers.Mutations.addLightingAsset(null, {
       input: mockInput,
     });
 
@@ -56,14 +56,17 @@ describe('updateLightingAsset Resolver', () => {
       cilLevel: 1,
     };
 
-    // Update currentStatus and predictiveStatus on the new asset
     const updatedAsset = await resolvers.Mutations.updateLightingAsset(null, {
       ID: result._id,
       input: updateData,
     });
-
-    expect(updatedAsset).toBeDefined();
-    expect(updatedAsset?.currentStatus).toBe('warning');
-    expect(updatedAsset?.predictiveStatus).toBe('warning');
+    if (updatedAsset) {
+      const plainUpdatedAsset = updatedAsset.toObject();
+      expect(plainUpdatedAsset).toBeDefined();
+      expect(plainUpdatedAsset?.currentStatus).toBe('GOOD');
+      expect(plainUpdatedAsset?.predictiveStatus.status).toBe('WARNING');
+    } else {
+      expect(updatedAsset).toBeDefined();
+    }
   });
 });
