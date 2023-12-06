@@ -230,20 +230,44 @@ const resolvers = {
       args: { ID: string; input: IUpdateLightingAssetInput }
     ) {
       try {
+        // Prepare the update object
+        let updateObj: { [key: string]: any } = {};
+
+        // Handle top-level fields except for nested objects
+        for (const [key, value] of Object.entries(args.input)) {
+          if (key !== 'predictiveStatus' && key !== 'location') {
+            updateObj[key] = value;
+          }
+        }
+
+        // Handle nested 'predictiveStatus' fields
+        if (args.input.predictiveStatus) {
+          for (const [key, value] of Object.entries(
+            args.input.predictiveStatus
+          )) {
+            updateObj[`predictiveStatus.${key}`] = value;
+          }
+        }
+
+        // Handle nested 'location' fields
+        if (args.input.location) {
+          for (const [key, value] of Object.entries(args.input.location)) {
+            updateObj[`location.${key}`] = value;
+          }
+        }
+
         const updatedLightingAsset = await LightingAsset.findByIdAndUpdate(
           args.ID,
-          args.input,
-          {
-            new: true,
-          }
+          { $set: updateObj }, // Use $set to update fields
+          { new: true }
         );
+
         return updatedLightingAsset;
       } catch (error) {
         console.error('Error in updateLightingAsset: ', error);
         throw new GraphQLError('Was not able to update lighting asset');
       }
     },
-
     async removeLightingAsset(_: unknown, { ID }: { ID: string }) {
       try {
         const result = (await LightingAsset.deleteOne({ _id: ID }))
