@@ -309,11 +309,27 @@ const resolvers = {
       args: { ID: string; input: IUpdateMetricMetaData }
     ) => {
       try {
-        // Find the document by ID and update it
+        // Define the type for updateObj
+        let updateObj: { [key: string]: any } = {};
+
+        // Handle top-level fields except 'scale'
+        for (const [key, value] of Object.entries(args.input)) {
+          if (key !== 'scale') {
+            updateObj[key] = value;
+          }
+        }
+
+        // Handle nested 'scale' fields
+        if (args.input.scale) {
+          for (const [key, value] of Object.entries(args.input.scale)) {
+            updateObj[`scale.${key}`] = value; // Update nested fields using dot notation
+          }
+        }
+
         const updatedMetric = await MetricMetaData.findByIdAndUpdate(
           args.ID,
-          args.input,
-          { new: true } // Return the updated document
+          { $set: updateObj }, // Use $set to update fields
+          { new: true }
         );
 
         if (!updatedMetric) {
@@ -325,6 +341,7 @@ const resolvers = {
         throw new Error(`Error updating metric`);
       }
     },
+
     async removeMetric(_: unknown, { ID }: { ID: string }) {
       try {
         const result = (await MetricMetaData.deleteOne({ _id: ID }))

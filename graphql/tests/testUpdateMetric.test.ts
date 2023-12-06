@@ -28,7 +28,7 @@ describe('updateMetric Resolver', () => {
   });
 
   afterAll(async () => {
-    await MetricMetaData.deleteMany({});
+    //await MetricMetaData.deleteMany({});
     await mongoose.connection.close();
   });
 
@@ -56,7 +56,7 @@ describe('updateMetric Resolver', () => {
     expect(updatedMetric).toBeDefined();
     expect(updatedMetric.unit).toBe('kilowatt');
     expect(updatedMetric.tooltipSummary).toBe(updateData.tooltipSummary);
-    expect(updatedMetric.scale.good).toBe(updateData.scale?.good ?? '3.5');
+    expect(updatedMetric.scale.good).toBe(updateData.scale?.good ?? '4.5');
     // Optionally check if other fields remain unchanged
     expect(updatedMetric.information).toBe(addedMetric.information);
     expect(updatedMetric.tooltipSummary).toBe(addedMetric.tooltipSummary);
