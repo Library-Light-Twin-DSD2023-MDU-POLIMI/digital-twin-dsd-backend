@@ -5,7 +5,7 @@ const typeDefs = gql`
     _id: ID!
     uid: String!
     currentStatus: CurrentStatus!
-    predictiveStatus: PredictiveStatusType!
+    predictiveStatus: PredictedStatusType!
     type: LightingType!
     location: Location!
     workOrders: [WorkOrder]
@@ -221,7 +221,7 @@ const typeDefs = gql`
   input AddLightingAssetInput {
     uid: String!
     currentStatus: CurrentStatus!
-    predictiveStatus: PredictiveStatusType
+    predictiveStatus: PredictedStatusType
     type: LightingType!
     location: Location!
   }
@@ -229,7 +229,7 @@ const typeDefs = gql`
   input UpdateLightingAssetInput {
     uid: String!
     currentStatus: CurrentStatus
-    predictiveStatus: PredictiveStatusType
+    predictiveStatus: PredictedStatusType
     location: Location
   }
 
