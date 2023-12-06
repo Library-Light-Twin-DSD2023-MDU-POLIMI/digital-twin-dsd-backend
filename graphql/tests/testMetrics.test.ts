@@ -31,10 +31,10 @@ describe('metrics Query', () => {
     };
     const allPromises: Promise<any>[] = [];
     allPromises.push(
-      resolvers.Mutations.addMetric(null, { input: metricInput1 })
+      resolvers.Mutation.addMetric(null, { input: metricInput1 })
     );
     allPromises.push(
-      resolvers.Mutations.addMetric(null, { input: metricInput2 })
+      resolvers.Mutation.addMetric(null, { input: metricInput2 })
     );
 
     await Promise.all(allPromises);
