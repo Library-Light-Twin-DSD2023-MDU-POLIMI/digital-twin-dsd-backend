@@ -29,7 +29,9 @@ export const lambdaHandler: Handler<
   APIGatewayProxyResult
 > = (event, context, callback) => {
   if (mongoose.connections.length < 1) {
-    mongoose.connect('mongodb+srv:/application:lol@dsd.iaano1k.mongodb.net/');
+    mongoose.connect(
+      'mongodb+srv:/application:lol@dsd.iaano1k.mongodb.net/sandbox'
+    );
   }
   return baseHandler(event, context, callback);
 };
