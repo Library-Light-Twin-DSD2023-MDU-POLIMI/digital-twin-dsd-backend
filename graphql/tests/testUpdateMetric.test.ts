@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
+import MetricMetaData from '../models/MetricMetaData';
 import {
   IAddMetricMetaData,
   IUpdateMetricMetaData,
-} from '../../resolvers/iResolvers/iMutations';
-import resolvers from '../../resolvers/resolvers';
+} from '../resolvers/iResolvers/iMutations';
+import resolvers from '../resolvers/resolvers';
 
 const mockAddInput: IAddMetricMetaData = {
   metric: 'maintainedAverage',
@@ -27,6 +28,7 @@ describe('updateMetric Resolver', () => {
   });
 
   afterAll(async () => {
+    await MetricMetaData.deleteMany({});
     await mongoose.connection.close();
   });
 
@@ -39,6 +41,7 @@ describe('updateMetric Resolver', () => {
     const updateData: IUpdateMetricMetaData = {
       metric: addedMetric.metric,
       unit: 'kilowatt', // updated unit
+      tooltipSummary: 'Updated summary', // updated tooltipSummary
       scale: { ...addedMetric.scale, good: '3.5' }, // updating one scale value
       // information and tooltipSummary fields are not updated
     };
@@ -48,10 +51,12 @@ describe('updateMetric Resolver', () => {
       ID: addedMetric._id.toString(),
       input: updateData,
     });
+
     if (!updatedMetric) throw new Error('updatedMetric is undefined');
     expect(updatedMetric).toBeDefined();
     expect(updatedMetric.unit).toBe('kilowatt');
-    expect(updatedMetric.scale.good).toBe('3.5');
+    expect(updatedMetric.tooltipSummary).toBe(updateData.tooltipSummary);
+    expect(updatedMetric.scale.good).toBe(updateData.scale?.good ?? '3.5');
     // Optionally check if other fields remain unchanged
     expect(updatedMetric.information).toBe(addedMetric.information);
     expect(updatedMetric.tooltipSummary).toBe(addedMetric.tooltipSummary);

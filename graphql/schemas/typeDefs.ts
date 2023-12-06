@@ -173,8 +173,8 @@ const typeDefs = gql`
   #MetricMetaData
   type Metric {
     metric: String!
-    unit: String!
-    scale: Scale
+    unit: String
+    scale: Scale!
     information: String
     tooltipSummary: String
   }
@@ -273,7 +273,7 @@ const typeDefs = gql`
 
   input MetricMetaDataInput {
     metric: String!
-    unit: String!
+    unit: String
     scale: ScaleInput
     information: String
     tooltipSummary: String

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import MetricMetaData from '../../models/MetricMetaData';
-import { IAddMetricMetaData } from '../../resolvers/iResolvers/iMutations';
-import resolvers from '../../resolvers/resolvers';
+import MetricMetaData from '../models/MetricMetaData';
+import { IAddMetricMetaData } from '../resolvers/iResolvers/iMutations';
+import resolvers from '../resolvers/resolvers';
 
 const mockInput: IAddMetricMetaData = {
   metric: 'WATT',
@@ -45,9 +45,7 @@ describe('removeMetric Resolver', () => {
     expect(removalResult).toBeTruthy();
 
     // Confirm that the metric no longer exists in the database
-    const dbMetric = await MetricMetaData.findOne({
-      metric: addedMetric.metric,
-    });
+    const dbMetric = await MetricMetaData.findById(addedMetric._id);
     expect(dbMetric).toBeNull();
   });
 });

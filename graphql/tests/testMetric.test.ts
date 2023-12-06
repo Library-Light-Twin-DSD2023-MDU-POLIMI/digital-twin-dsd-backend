@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import MetricMetaData from '../../models/MetricMetaData';
-import resolvers from '../../resolvers/resolvers';
+import MetricMetaData from '../models/MetricMetaData';
+import resolvers from '../resolvers/resolvers';
 
 describe('metric Query', () => {
   beforeAll(async () => {
@@ -13,7 +13,9 @@ describe('metric Query', () => {
     await MetricMetaData.create({
       metric: 'WATT',
       unit: 'watt',
-      scale: {},
+      scale: {
+        good: '3',
+      },
       information: 'Info about WATT',
       tooltipSummary: 'Summary WATT',
     });
@@ -21,7 +23,9 @@ describe('metric Query', () => {
 
   afterAll(async () => {
     // Clean up the test data
-    await MetricMetaData.deleteMany({});
+    await MetricMetaData.deleteOne({
+      metric: 'WATT',
+    });
     await mongoose.connection.close();
   });
 

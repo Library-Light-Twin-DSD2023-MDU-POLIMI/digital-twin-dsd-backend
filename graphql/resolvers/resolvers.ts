@@ -1,3 +1,4 @@
+import e from 'cors';
 import { GraphQLError } from 'graphql';
 import mongoose from 'mongoose';
 
@@ -285,44 +286,43 @@ const resolvers = {
 
     async addMetric(_: unknown, args: { input: IAddMetricMetaData }) {
       // Check if the metric already exists
-      const existingMetric = await MetricMetaData.findOne({
-        metric: args.input.metric,
-      });
+      try {
+        const existingMetric = await MetricMetaData.findOne({
+          metric: args.input.metric,
+        });
 
-      if (existingMetric) {
-        // If the metric already exists, throw an error or return some kind of message
-        throw new Error('A metric with this name already exists.');
-      } else {
-        // If the metric does not exist, create a new one
-        const newMetric = new MetricMetaData(args.input);
-        return await newMetric.save();
+        if (existingMetric) {
+          // If the metric already exists, throw an error or return some kind of message
+          return existingMetric;
+        } else {
+          // If the metric does not exist, create a new one
+          const newMetric = new MetricMetaData(args.input);
+          return await newMetric.save();
+        }
+      } catch (error) {
+        throw new GraphQLError('Was not able to add a new metric');
       }
     },
 
-    async updateMetric(
+    updateMetric: async (
       _: unknown,
       args: { ID: string; input: IUpdateMetricMetaData }
-    ) {
-      const { metric, unit, information, tooltipSummary, scale } = args.input;
+    ) => {
+      try {
+        // Find the document by ID and update it
+        const updatedMetric = await MetricMetaData.findByIdAndUpdate(
+          args.ID,
+          args.input,
+          { new: true } // Return the updated document
+        );
 
-      // Construct an update object with only defined fields using object spread syntax
-      const updateData: IUpdateMetricMetaData = {
-        metric,
-        ...(unit !== undefined && { unit }),
-        ...(information !== undefined && { information }),
-        ...(tooltipSummary !== undefined && { tooltipSummary }),
-        ...(scale !== undefined && { scale }),
-      };
+        if (!updatedMetric) {
+          throw new Error('Metric not found');
+        }
 
-      // Check if there's something to update other than the metric itself
-      if (Object.keys(updateData).length > 1) {
-        console.log('updateData: ', updateData);
-        // '1' accounts for the 'metric' field
-        return await MetricMetaData.findByIdAndUpdate(args.ID, updateData, {
-          new: true,
-        });
-      } else {
-        throw new Error('No valid fields provided for update.');
+        return updatedMetric;
+      } catch (e) {
+        throw new Error(`Error updating metric`);
       }
     },
     async removeMetric(_: unknown, { ID }: { ID: string }) {
@@ -378,9 +378,6 @@ const resolvers = {
           { new: true }
         );
 
-        const updatedLightingAsset = await LightingAsset.findByIdAndUpdate(
-          args.input.lightingAssetID
-        );
         if (!updatedWorkOrder) {
           throw new GraphQLError('WorkOrder not found');
         }

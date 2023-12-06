@@ -2,21 +2,21 @@ import mongoose from 'mongoose';
 
 export interface IMetricMetaData extends Document {
   metric: string;
-  unit: string;
-  information: string;
-  tooltipSummary: string;
+  unit?: string;
+  information?: string;
+  tooltipSummary?: string;
   scale: {
-    tooHigh: string;
-    perfect: string;
+    tooHigh?: string;
+    perfect?: string;
     good: string;
-    mid: string;
-    tooLow: string;
+    mid?: string;
+    tooLow?: string;
   };
 }
 const scaleSchema = new mongoose.Schema({
   tooHigh: { type: String },
   perfect: { type: String },
-  good: { type: String },
+  good: { type: String, required: true },
   mid: { type: String },
   tooLow: { type: String },
 });
@@ -39,9 +39,9 @@ const metricSchema = new mongoose.Schema({
     ],
   },
   scale: scaleSchema,
-  unit: { type: String, required: true },
-  information: { type: String, required: true },
-  tooltipSummary: { type: String, required: true },
+  unit: { type: String },
+  information: { type: String },
+  tooltipSummary: { type: String },
 });
 
 const MetricMetaData = mongoose.model<IMetricMetaData>(
