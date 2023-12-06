@@ -1,4 +1,3 @@
-import e from 'cors';
 import { GraphQLError } from 'graphql';
 import mongoose from 'mongoose';
 
@@ -78,7 +77,7 @@ const resolvers = {
     },
 
     async getLightingAssetTimeSeriesData(
-      _: any,
+      _: unknown,
       args: {
         assetId: string;
         startTime: string;
