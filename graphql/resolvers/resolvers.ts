@@ -204,7 +204,7 @@ const resolvers = {
     },
   },
 
-  Mutations: {
+  Mutation: {
     async addLightingAsset(
       _: unknown,
       args: { input: IAddLightingAssetInput }

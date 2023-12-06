@@ -30,7 +30,7 @@ describe('addMetric Resolver', () => {
   });
 
   test('should add a new metric', async () => {
-    const result = await resolvers.Mutations.addMetric(null, {
+    const result = await resolvers.Mutation.addMetric(null, {
       input: mockInput,
     });
 

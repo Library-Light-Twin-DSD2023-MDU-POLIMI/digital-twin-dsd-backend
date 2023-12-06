@@ -38,7 +38,7 @@ describe('removeLightingAsset Resolver', () => {
     });
 
     // Remove asset
-    const removalResult = await resolvers.Mutations.removeLightingAsset(null, {
+    const removalResult = await resolvers.Mutation.removeLightingAsset(null, {
       ID: result._id.toString(),
     });
 

@@ -32,12 +32,12 @@ describe('removeMetric Resolver', () => {
 
   test('should remove the metric', async () => {
     // Add a new metric
-    const addedMetric = await resolvers.Mutations.addMetric(null, {
+    const addedMetric = await resolvers.Mutation.addMetric(null, {
       input: mockInput,
     });
 
     // Remove metric
-    const removalResult = await resolvers.Mutations.removeMetric(null, {
+    const removalResult = await resolvers.Mutation.removeMetric(null, {
       ID: addedMetric._id.toString(),
     });
 

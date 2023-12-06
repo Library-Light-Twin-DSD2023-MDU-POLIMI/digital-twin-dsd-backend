@@ -34,7 +34,7 @@ describe('updateMetric Resolver', () => {
 
   test('should update the metric', async () => {
     // Add a new metric
-    const addedMetric = await resolvers.Mutations.addMetric(null, {
+    const addedMetric = await resolvers.Mutation.addMetric(null, {
       input: mockAddInput,
     });
 
@@ -47,7 +47,7 @@ describe('updateMetric Resolver', () => {
     };
 
     // Update unit and scale of the new metric
-    const updatedMetric = await resolvers.Mutations.updateMetric(null, {
+    const updatedMetric = await resolvers.Mutation.updateMetric(null, {
       ID: addedMetric._id.toString(),
       input: updateData,
     });
