@@ -31,7 +31,7 @@ const resolvers = {
       return await LightingAsset.findById(ID);
     },
     async lightingAssets(
-      _: any,
+      _: unknown,
       args: { input: ISortAndPaginate; filter: ILightingAssetFilter }
     ) {
       // Start with a basic query
