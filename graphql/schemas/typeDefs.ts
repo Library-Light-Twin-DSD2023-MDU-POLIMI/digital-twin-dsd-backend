@@ -17,6 +17,11 @@ const typeDefs = gql`
     status: PredictiveStatus!
     predictedTime: String!
   }
+
+  input PredictedStatusTypeInput {
+    status: PredictiveStatus!
+    predictedTime: String!
+  }
   enum PredictiveStatus {
     OKAY
     WARNING
@@ -40,10 +45,10 @@ const typeDefs = gql`
   }
 
   input LightingAssetFilter {
-    location: Location
+    location: LocationInput
     lightingType: LightingType
     currentStatus: CurrentStatus
-    predictedStatus: PredictedStatusType
+    predictedStatus: PredictedStatusTypeInput
   }
 
   #Location
@@ -53,6 +58,11 @@ const typeDefs = gql`
     area: String!
   }
 
+  input LocationInput {
+    floor: Int!
+    section: String!
+    area: String!
+  }
   #LightingAssetTimeSeriesData
   type LightingAssetTimeSeriesData {
     timestamp: String!
@@ -72,9 +82,18 @@ const typeDefs = gql`
     WATT: WATT
   }
 
+  input PowerInput {
+    WATT: WATTInput
+  }
+
   type WATT {
     value: Float
     healthStatus: Int # Number from 1-5, indicating the health status of Watt
+  }
+
+  input WATTInput {
+    value: Float
+    healthStatus: Int
   }
 
   #Illuminance
@@ -83,9 +102,19 @@ const typeDefs = gql`
     uniformityRatio: UniformityRatio
   }
 
+  input IlluminanceInput {
+    maintainedAverage: MaintainedAverageInput
+    uniformityRatio: UniformityRatioInput
+  }
+
   type MaintainedAverage {
     value: Float
     healthStatus: Int # Number from 1-5, indicating the health status of maintainedAverage
+  }
+
+  input MaintainedAverageInput {
+    value: Float
+    healthStatus: Int
   }
 
   type UniformityRatio {
@@ -93,9 +122,17 @@ const typeDefs = gql`
     healthStatus: Int # Number from 1-5, indicating the health status of uniformityRatio
   }
 
+  input UniformityRatioInput {
+    value: Float
+    healthStatus: Int
+  }
+
   #Glare
   type Glare {
     UGR: UGR
+  }
+  input GlareInput {
+    UGR: UGRInput
   }
 
   type UGR {
@@ -103,14 +140,28 @@ const typeDefs = gql`
     healthStatus: Int # Number from 1-5, indicating the health status of UGR
   }
 
+  input UGRInput {
+    value: Float
+    healthStatus: Int
+  }
+
   # ColorRendering
   type ColorRendering {
     CRI: CRI
   }
 
+  input ColorRenderingInput {
+    CRI: CRIInput
+  }
+
   type CRI {
     value: Float
     healthStatus: Int # Number from 1-5, indicating the health status of CRI
+  }
+
+  input CRIInput {
+    value: Float
+    healthStatus: Int
   }
 
   #ColorTemperature
@@ -119,9 +170,19 @@ const typeDefs = gql`
     Duv: Duv
   }
 
+  input ColorTemperatureInput {
+    CCT: CCTInput
+    Duv: DuvInput
+  }
+
   type CCT {
     value: Float
     healthStatus: Int # Number from 1-5, indicating the health status of CCT
+  }
+
+  input CCTInput {
+    value: Float
+    healthStatus: Int
   }
 
   type Duv {
@@ -129,9 +190,18 @@ const typeDefs = gql`
     healthStatus: Int # Number from 1-5, indicating the health status of Duv
   }
 
+  input DuvInput {
+    value: Float
+    healthStatus: Int
+  }
+
   #Flicker
   type Flicker {
     SVM: SVM
+  }
+
+  input FlickerInput {
+    SVM: SVMInput
   }
 
   type SVM {
@@ -139,9 +209,18 @@ const typeDefs = gql`
     healthStatus: Int # Number from 1-5, indicating the health status of SVM
   }
 
+  input SVMInput {
+    value: Float
+    healthStatus: Int
+  }
+
   #ColorPreference
   type ColorPreference {
     PVF: PVF
+  }
+
+  input ColorPreferenceInput {
+    PVF: PVFInput
   }
 
   type PVF {
@@ -149,14 +228,27 @@ const typeDefs = gql`
     healthStatus: Int # Number from 1-5, indicating the health status of PVF
   }
 
+  input PVFInput {
+    value: Float
+  }
+
   #PhotobiologicalSafety
   type PhotobiologicalSafety {
     UV: PhotobiologicalSafetyUV
   }
 
+  input PhotobiologicalSafetyInput {
+    UV: PhotobiologicalSafetyUVInput
+  }
+
   type PhotobiologicalSafetyUV {
     value: Float
     healthStatus: Int # Number from 1-5, indicating the health status of UV
+  }
+
+  input PhotobiologicalSafetyUVInput {
+    value: Float
+    healthStatus: Int
   }
 
   type LightingAssetAverageData {
@@ -221,16 +313,16 @@ const typeDefs = gql`
   input AddLightingAssetInput {
     uid: String!
     currentStatus: CurrentStatus!
-    predictiveStatus: PredictedStatusType
+    predictiveStatus: PredictedStatusTypeInput
     type: LightingType!
-    location: Location!
+    location: LocationInput!
   }
 
   input UpdateLightingAssetInput {
     uid: String!
     currentStatus: CurrentStatus
-    predictiveStatus: PredictedStatusType
-    location: Location
+    predictiveStatus: PredictedStatusTypeInput
+    location: LocationInput
   }
 
   # Input types and enums for LightingAssetTimeSeriesData
@@ -238,14 +330,14 @@ const typeDefs = gql`
   input LightingAssetMeasurementInput {
     assetId: ID!
     timestamp: String!
-    power: Power
-    illuminance: Illuminance
-    glare: Glare
-    colorRendering: ColorRendering
-    colorTemperature: ColorTemperature
-    flicker: Flicker
-    colorPreference: ColorPreference
-    photobiologicalSafety: PhotobiologicalSafety
+    power: PowerInput
+    illuminance: IlluminanceInput
+    glare: GlareInput
+    colorRendering: ColorRenderingInput
+    colorTemperature: ColorTemperatureInput
+    flicker: FlickerInput
+    colorPreference: ColorPreferenceInput
+    photobiologicalSafety: PhotobiologicalSafetyInput
   }
   enum ComparisonType {
     LESS
@@ -296,7 +388,7 @@ const typeDefs = gql`
     workOrderStatus: WorkOrderStatus!
     description: String!
     comment: String
-    location: Location!
+    location: LocationInput!
     dateOfMaintenance: String!
     excecutionStartDate: String
     excecutedDate: String
@@ -309,7 +401,7 @@ const typeDefs = gql`
     workOrderStatus: WorkOrderStatus
     description: String
     comment: String
-    location: Location
+    location: LocationInput
     dateOfMaintenance: String
     excecutionStartDate: String
     excecutedDate: String
