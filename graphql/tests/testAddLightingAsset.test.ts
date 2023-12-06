@@ -23,7 +23,7 @@ const mockInput: IAddLightingAssetInput = {
 describe('addLightingAsset Resolver', () => {
   beforeAll(async () => {
     const connectionString =
-      'mongodb+srv://application:lol@dsd.iaano1k.mongodb.net/';
+      'mongodb+srv://application:lol@dsd.iaano1k.mongodb.net/test';
     await mongoose.connect(connectionString, {});
   });
 
@@ -32,7 +32,7 @@ describe('addLightingAsset Resolver', () => {
   });
 
   test('should add a new lighting asset', async () => {
-    const result = await resolvers.Mutations.addLightingAsset(null, {
+    const result = await resolvers.Mutation.addLightingAsset(null, {
       input: mockInput,
     });
 

@@ -6,12 +6,15 @@ import {
   LightingAssetTimeSeriesData,
   WorkOrder,
 } from '../models/index';
+import MetricMetaData from '../models/MetricMetaData';
 
 import {
   IAddLightingAssetInput,
+  IAddMetricMetaData,
   IAddWorkOrderInput,
   ILightingAssetMeasurementInput,
   IUpdateLightingAssetInput,
+  IUpdateMetricMetaData,
   IUpdateWorkOrderInput,
 } from './iResolvers/iMutations';
 
@@ -28,7 +31,7 @@ const resolvers = {
       return await LightingAsset.findById(ID);
     },
     async lightingAssets(
-      _: any,
+      _: unknown,
       args: { input: ISortAndPaginate; filter: ILightingAssetFilter }
     ) {
       // Start with a basic query
@@ -74,7 +77,7 @@ const resolvers = {
     },
 
     async getLightingAssetTimeSeriesData(
-      _: any,
+      _: unknown,
       args: {
         assetId: string;
         startTime: string;
@@ -185,6 +188,12 @@ const resolvers = {
         averagePhotobiologicalSafety: item.averagePhotobiologicalSafety,
       }));
     },
+    async metrics() {
+      return await MetricMetaData.find();
+    },
+    async metric(_: unknown, { metric }: { metric: string }) {
+      return await MetricMetaData.findOne({ metric });
+    },
 
     async workOrder(_: unknown, { ID }: { ID: string }) {
       return await WorkOrder.findById(ID);
@@ -195,7 +204,7 @@ const resolvers = {
     },
   },
 
-  Mutations: {
+  Mutation: {
     async addLightingAsset(
       _: unknown,
       args: { input: IAddLightingAssetInput }
@@ -220,20 +229,44 @@ const resolvers = {
       args: { ID: string; input: IUpdateLightingAssetInput }
     ) {
       try {
+        // Prepare the update object
+        let updateObj: { [key: string]: any } = {};
+
+        // Handle top-level fields except for nested objects
+        for (const [key, value] of Object.entries(args.input)) {
+          if (key !== 'predictiveStatus' && key !== 'location') {
+            updateObj[key] = value;
+          }
+        }
+
+        // Handle nested 'predictiveStatus' fields
+        if (args.input.predictiveStatus) {
+          for (const [key, value] of Object.entries(
+            args.input.predictiveStatus
+          )) {
+            updateObj[`predictiveStatus.${key}`] = value;
+          }
+        }
+
+        // Handle nested 'location' fields
+        if (args.input.location) {
+          for (const [key, value] of Object.entries(args.input.location)) {
+            updateObj[`location.${key}`] = value;
+          }
+        }
+
         const updatedLightingAsset = await LightingAsset.findByIdAndUpdate(
           args.ID,
-          args.input,
-          {
-            new: true,
-          }
+          { $set: updateObj }, // Use $set to update fields
+          { new: true }
         );
+
         return updatedLightingAsset;
       } catch (error) {
         console.error('Error in updateLightingAsset: ', error);
         throw new GraphQLError('Was not able to update lighting asset');
       }
     },
-
     async removeLightingAsset(_: unknown, { ID }: { ID: string }) {
       try {
         const result = (await LightingAsset.deleteOne({ _id: ID }))
@@ -271,6 +304,75 @@ const resolvers = {
         throw new GraphQLError(
           'Was not able to add new lighting asset measurements'
         );
+      }
+    },
+
+    async addMetric(_: unknown, args: { input: IAddMetricMetaData }) {
+      // Check if the metric already exists
+      try {
+        const existingMetric = await MetricMetaData.findOne({
+          metric: args.input.metric,
+        });
+
+        if (existingMetric) {
+          // If the metric already exists, throw an error or return some kind of message
+          return existingMetric;
+        } else {
+          // If the metric does not exist, create a new one
+          const newMetric = new MetricMetaData(args.input);
+          return await newMetric.save();
+        }
+      } catch (error) {
+        throw new GraphQLError('Was not able to add a new metric');
+      }
+    },
+
+    updateMetric: async (
+      _: unknown,
+      args: { ID: string; input: IUpdateMetricMetaData }
+    ) => {
+      try {
+        // Define the type for updateObj
+        let updateObj: { [key: string]: any } = {};
+
+        // Handle top-level fields except 'scale'
+        for (const [key, value] of Object.entries(args.input)) {
+          if (key !== 'scale') {
+            updateObj[key] = value;
+          }
+        }
+
+        // Handle nested 'scale' fields
+        if (args.input.scale) {
+          for (const [key, value] of Object.entries(args.input.scale)) {
+            updateObj[`scale.${key}`] = value; // Update nested fields using dot notation
+          }
+        }
+
+        const updatedMetric = await MetricMetaData.findByIdAndUpdate(
+          args.ID,
+          { $set: updateObj }, // Use $set to update fields
+          { new: true }
+        );
+
+        if (!updatedMetric) {
+          throw new Error('Metric not found');
+        }
+
+        return updatedMetric;
+      } catch (e) {
+        throw new Error(`Error updating metric`);
+      }
+    },
+
+    async removeMetric(_: unknown, { ID }: { ID: string }) {
+      try {
+        const result = (await MetricMetaData.deleteOne({ _id: ID }))
+          .deletedCount;
+        return result > 0;
+      } catch (error) {
+        console.error('Error in removeMetric: ', error);
+        throw new GraphQLError('Was not able to remove metric');
       }
     },
 
@@ -316,9 +418,6 @@ const resolvers = {
           { new: true }
         );
 
-        const updatedLightingAsset = await LightingAsset.findByIdAndUpdate(
-          args.input.lightingAssetID
-        );
         if (!updatedWorkOrder) {
           throw new GraphQLError('WorkOrder not found');
         }

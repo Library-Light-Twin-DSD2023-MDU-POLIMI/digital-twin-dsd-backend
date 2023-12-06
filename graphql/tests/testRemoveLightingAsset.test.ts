@@ -1,11 +1,8 @@
 import mongoose from 'mongoose';
-import resolvers from '../resolvers/resolvers';
-import { LightingAsset } from '../models'; // Model
-import {
-  IAddLightingAssetInput,
-  IUpdateLightingAssetInput,
-} from '../resolvers/iResolvers/iMutations';
 import { v4 as uuidv4 } from 'uuid';
+import { LightingAsset } from '../models';
+import { IAddLightingAssetInput } from '../resolvers/iResolvers/iMutations';
+import resolvers from '../resolvers/resolvers';
 
 const mockInput: IAddLightingAssetInput = {
   uid: uuidv4(), // Generates a unique UUID each time
@@ -41,7 +38,7 @@ describe('removeLightingAsset Resolver', () => {
     });
 
     // Remove asset
-    const removalResult = await resolvers.Mutations.removeLightingAsset(null, {
+    const removalResult = await resolvers.Mutation.removeLightingAsset(null, {
       ID: result._id.toString(),
     });
 

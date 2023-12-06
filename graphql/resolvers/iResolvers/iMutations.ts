@@ -70,12 +70,40 @@ export interface ILightingAssetMeasurementInput {
   };
 }
 
+export interface IAddMetricMetaData {
+  metric: string;
+  unit?: string;
+  information?: string;
+  tooltipSummary?: string;
+  scale: {
+    tooHigh?: string;
+    perfect?: string;
+    good: string;
+    mid?: string;
+    tooLow?: string;
+  };
+}
+
+export interface IUpdateMetricMetaData {
+  metric?: string;
+  unit?: string;
+  information?: string;
+  tooltipSummary?: string;
+  scale?: {
+    tooHigh?: string;
+    perfect?: string;
+    good: string;
+    mid?: string;
+    tooLow?: string;
+  };
+}
+
 export interface IAddWorkOrderInput {
   workOrderID: string;
   lightingAssetID: string;
   workOrderStatus: WorkOrderStatus;
   description: string;
-  comment: string;
+  comment?: string;
   location: Location;
   dateOfMaintenance: Date;
   executionStartDate: Date;
@@ -84,12 +112,12 @@ export interface IAddWorkOrderInput {
 export interface IUpdateWorkOrderInput {
   workOrderID: string;
   lightingAssetID: string;
-  type: WorkOrderType;
-  workOrderStatus: WorkOrderStatus;
-  description: string;
-  comment: string;
-  location: Location;
-  dateOfMaintenance: Date;
-  executionStartDate: Date;
-  executedDate: Date;
+  type?: WorkOrderType;
+  workOrderStatus?: WorkOrderStatus;
+  description?: string;
+  comment?: string;
+  location?: Location;
+  dateOfMaintenance?: Date;
+  executionStartDate?: Date;
+  executedDate?: Date;
 }
