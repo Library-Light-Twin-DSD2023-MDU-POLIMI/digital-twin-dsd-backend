@@ -301,8 +301,9 @@ const resolvers = {
           );
         return lightingAssetTimeSeriesData;
       } catch (error) {
+        console.error('Error in addWorkOrder resolver:', error);
         throw new GraphQLError(
-          'Was not able to add new lighting asset measurements'
+          'Was not able to add a new work order: ' + error
         );
       }
     },
@@ -378,24 +379,27 @@ const resolvers = {
 
     async addWorkOrder(_: unknown, args: { input: IAddWorkOrderInput }) {
       try {
+        // Check if the corresponding LightingAsset exists
+        const lightingAsset = await LightingAsset.findById(
+          args.input.lightingAssetID
+        );
+        if (!lightingAsset) {
+          throw new Error('LightingAsset not found');
+        }
+
         // Create and save the new WorkOrder
         const newWorkOrder = new WorkOrder(args.input);
         const savedWorkOrder = await newWorkOrder.save();
-
-        // If the WorkOrder has a lightingAssetID, update the corresponding LightingAsset
-        if (savedWorkOrder.lightingAssetID) {
-          await LightingAsset.findByIdAndUpdate(
-            savedWorkOrder.lightingAssetID,
-            { $addToSet: { workOrders: savedWorkOrder._id } }
-          );
-        }
+        // Update the corresponding LightingAsset
+        await LightingAsset.findByIdAndUpdate(savedWorkOrder.lightingAssetID, {
+          $addToSet: { workOrders: savedWorkOrder._id },
+        });
 
         return savedWorkOrder;
       } catch (error) {
         throw new GraphQLError('Was not able to add a new work order');
       }
     },
-
     async updateWorkOrder(
       _: unknown,
       args: { ID: string; input: IUpdateWorkOrderInput }
