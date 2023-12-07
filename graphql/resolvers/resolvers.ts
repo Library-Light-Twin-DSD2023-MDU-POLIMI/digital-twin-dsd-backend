@@ -199,7 +199,7 @@ const resolvers = {
       return await WorkOrder.findById(ID);
     },
 
-    async workOrders(_: unknown) {
+    async workOrders() {
       return await WorkOrder.find();
     },
   },
