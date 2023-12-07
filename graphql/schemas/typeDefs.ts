@@ -284,7 +284,7 @@ const typeDefs = gql`
     _id: ID!
     workOrderID: String!
     lightingAssetID: ID!
-    type: WorkOrderType!
+    workOrderType: WorkOrderType!
     workOrderStatus: WorkOrderStatus!
     description: String!
     comment: String
@@ -384,7 +384,7 @@ const typeDefs = gql`
   input AddWorkOrderInput {
     workOrderID: String!
     lightingAssetID: ID!
-    type: WorkOrderType!
+    workOrderType: WorkOrderType!
     workOrderStatus: WorkOrderStatus!
     description: String!
     comment: String
@@ -395,9 +395,9 @@ const typeDefs = gql`
   }
 
   input UpdateWorkOrderInput {
-    workOrderID: String
-    lightingAssetID: ID
-    type: WorkOrderType
+    workOrderID: String!
+    lightingAssetID: ID!
+    workOrderType: WorkOrderType
     workOrderStatus: WorkOrderStatus
     description: String
     comment: String

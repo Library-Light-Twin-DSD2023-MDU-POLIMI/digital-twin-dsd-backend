@@ -388,7 +388,9 @@ const resolvers = {
         }
 
         // Create and save the new WorkOrder
-        const newWorkOrder = new WorkOrder(args.input);
+        const newWorkOrder = new WorkOrder({
+          ...args.input,
+        });
         const savedWorkOrder = await newWorkOrder.save();
         // Update the corresponding LightingAsset
         await LightingAsset.findByIdAndUpdate(savedWorkOrder.lightingAssetID, {
@@ -397,7 +399,7 @@ const resolvers = {
 
         return savedWorkOrder;
       } catch (error) {
-        throw new GraphQLError('Was not able to add a new work order');
+        throw new GraphQLError('Was not able to add a new work order' + error);
       }
     },
     async updateWorkOrder(

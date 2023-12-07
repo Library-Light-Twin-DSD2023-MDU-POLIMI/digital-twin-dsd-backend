@@ -1,20 +1,17 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { ILightingAsset } from './LightingAsset';
-
+import { Location } from './LightingAsset';
 export type WorkOrderStatus = 'SCHEDULED' | 'COMPLETED' | 'NOTCOMPLETED';
 export type WorkOrderType = 'CM' | 'PM' | 'PDM'; // New type for work order types
 
 export interface IWorkOrder extends Document {
   workOrderID: string;
   lightingAssetID: ILightingAsset['_id'];
-  type: WorkOrderType;
+  workOrderType: WorkOrderType;
   workOrderStatus: WorkOrderStatus;
   description: string;
   comment: string;
-  location: {
-    floor: number;
-    section: string;
-  };
+  location: Location;
   dateOfMaintenance: Date;
   executionStartDate: Date;
   executedDate: Date;
@@ -27,7 +24,7 @@ const workOrderSchema = new Schema<IWorkOrder>({
     ref: 'LightingAsset',
     required: true,
   },
-  type: {
+  workOrderType: {
     type: String,
     enum: ['CM', 'PM', 'PDM'],
     required: true,
