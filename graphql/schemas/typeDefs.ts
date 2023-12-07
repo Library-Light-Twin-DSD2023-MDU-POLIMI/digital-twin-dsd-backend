@@ -434,15 +434,15 @@ const typeDefs = gql`
     addLightingAsset(input: AddLightingAssetInput): LightingAsset
     updateLightingAsset(id: ID!, input: UpdateLightingAssetInput): LightingAsset
     removeLightingAsset(id: ID!): Boolean
-    addWorkOrder(input: AddWorkOrderInput!): WorkOrder
-    removeWorkOrder(id: ID!): Boolean
-    updateWorkOrder(id: ID!, input: UpdateWorkOrderInput!): WorkOrder
     addLightingAssetMeasurements(
       inputs: [LightingAssetMeasurementInput!]!
     ): [LightingAssetTimeSeriesData]
     addMetric(input: MetricMetaDataInput): Metric
     updateMetric(id: ID!, input: MetricMetaDataInput): Metric
     removeMetric(id: ID!): Metric
+    addWorkOrder(input: AddWorkOrderInput!): WorkOrder
+    removeWorkOrder(id: ID!): Boolean
+    updateWorkOrder(id: ID!, input: UpdateWorkOrderInput!): WorkOrder
   }
 `;
 
