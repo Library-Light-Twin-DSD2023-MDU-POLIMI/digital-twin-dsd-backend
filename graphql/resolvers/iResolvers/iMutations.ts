@@ -102,6 +102,7 @@ export interface IAddWorkOrderInput {
   workOrderID: string;
   lightingAssetID: string;
   workOrderStatus: WorkOrderStatus;
+  workOrderType: WorkOrderType;
   description: string;
   comment?: string;
   location: Location;
@@ -112,7 +113,7 @@ export interface IAddWorkOrderInput {
 export interface IUpdateWorkOrderInput {
   workOrderID: string;
   lightingAssetID: string;
-  type?: WorkOrderType;
+  workOrderType?: WorkOrderType;
   workOrderStatus?: WorkOrderStatus;
   description?: string;
   comment?: string;
