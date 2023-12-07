@@ -56,7 +56,7 @@ describe('updateLightingAsset Resolver', () => {
     };
 
     const updatedAsset = await resolvers.Mutation.updateLightingAsset(null, {
-      ID: result._id,
+      ID: result._id.toString(),
       input: updateData,
     });
     if (updatedAsset) {
