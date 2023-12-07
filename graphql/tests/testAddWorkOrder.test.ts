@@ -77,7 +77,7 @@ describe('addWorkOrder Resolver', () => {
     expect(result.workOrderType).toBe(mockWorkOrderInput.workOrderType);
     expect(result.workOrderStatus).toBe(mockWorkOrderInput.workOrderStatus);
     expect(result.description).toBe(mockWorkOrderInput.description);
-    //expect(result.location).toEqual(mockWorkOrderInput.location);
+    expect(result.location.area).toBe(mockWorkOrderInput.location.area);
 
     // Optionally, verify that the record exists in the database
     const dbWorkOrder = await WorkOrder.findById(result._id);
