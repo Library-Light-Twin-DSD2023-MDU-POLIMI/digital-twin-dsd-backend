@@ -55,7 +55,7 @@ describe('updateLightingAsset Resolver', () => {
       cilLevel: 1,
     };
 
-    const updatedAsset = await resolvers.Mutations.updateLightingAsset(null, {
+    const updatedAsset = await resolvers.Mutation.updateLightingAsset(null, {
       ID: result._id,
       input: updateData,
     });
