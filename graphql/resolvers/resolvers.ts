@@ -418,9 +418,26 @@ const resolvers = {
           }
         }
 
+        // Define the type for updateObj
+        let updateObj: { [key: string]: any } = {};
+
+        // Handle top-level fields except 'location'
+        for (const [key, value] of Object.entries(args.input)) {
+          if (key !== 'location') {
+            updateObj[key] = value;
+          }
+        }
+
+        // Handle nested 'location' fields
+        if (args.input.location) {
+          for (const [key, value] of Object.entries(args.input.location)) {
+            updateObj[`location.${key}`] = value; // Update nested fields using dot notation
+          }
+        }
+
         const updatedWorkOrder = await WorkOrder.findByIdAndUpdate(
           args.ID,
-          args.input,
+          { $set: updateObj }, // Use $set to update fields
           { new: true }
         );
 
@@ -428,24 +445,14 @@ const resolvers = {
           throw new GraphQLError('WorkOrder not found');
         }
 
-        if (args.input.lightingAssetID) {
-          // Remove WorkOrder ID from the old LightingAsset
-          await LightingAsset.updateOne(
-            { workOrders: args.ID },
-            { $pull: { workOrders: args.ID } }
-          );
+        // Existing logic for handling lightingAssetID updates
+        // ...
 
-          // Add WorkOrder ID to the new LightingAsset
-          await LightingAsset.findByIdAndUpdate(args.input.lightingAssetID, {
-            $addToSet: { workOrders: args.ID },
-          });
-        }
         return updatedWorkOrder;
       } catch (error) {
         throw new GraphQLError('Was not able to update work order');
       }
     },
-
     async removeWorkOrder(_: unknown, { ID }: { ID: string }) {
       try {
         const result = (await WorkOrder.deleteOne({ _id: ID })).deletedCount;

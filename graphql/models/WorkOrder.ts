@@ -39,6 +39,7 @@ const workOrderSchema = new Schema<IWorkOrder>({
   location: {
     floor: { type: Number, required: true },
     section: { type: String, required: true },
+    area: { type: String, required: true },
   },
   dateOfMaintenance: { type: Date, required: true },
   executionStartDate: { type: Date },
