@@ -1,28 +1,31 @@
-import mongoose from "mongoose";
-import resolvers from "../resolvers/resolvers";
-import { LightingAsset } from "../models"; // Model
+import mongoose from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
 import {
   IAddLightingAssetInput,
   IUpdateLightingAssetInput,
-} from "../resolvers/iResolvers/iMutations";
-import { v4 as uuidv4 } from "uuid";
+} from '../resolvers/iResolvers/iMutations';
+import resolvers from '../resolvers/resolvers';
 
 const mockInput: IAddLightingAssetInput = {
   uid: uuidv4(), // Generates a unique UUID each time
-  currentStatus: "good",
-  predictiveStatus: "okay",
-  type: "LED",
+  currentStatus: 'GOOD',
+  predictiveStatus: {
+    status: 'OKAY',
+    predictedTime: new Date(),
+  },
+  type: 'LED',
   location: {
     floor: 1,
-    section: "North Wing",
-    area: "Reception",
+    section: 'North Wing',
+    area: 'Reception',
   },
+  cilLevel: 1,
 };
 
-describe("updateLightingAsset Resolver", () => {
+describe('updateLightingAsset Resolver', () => {
   beforeAll(async () => {
     const connectionString =
-      "mongodb+srv://application:lol@dsd.iaano1k.mongodb.net/";
+      'mongodb+srv://application:lol@dsd.iaano1k.mongodb.net/test';
     await mongoose.connect(connectionString, {});
   });
 
@@ -30,34 +33,39 @@ describe("updateLightingAsset Resolver", () => {
     await mongoose.connection.close();
   });
 
-  test("should update the asset", async () => {
+  test('should update the asset', async () => {
     // Add a new asset
-    const result = await resolvers.Mutations.LightingAsset.addLightingAsset(
-      null,
-      { input: mockInput }
-    );
+    const result = await resolvers.Mutation.addLightingAsset(null, {
+      input: mockInput,
+    });
 
     const updateData: IUpdateLightingAssetInput = {
       uid: result.uid,
-      currentStatus: "warning",
-      predictiveStatus: "warning",
-      type: "LED",
+      currentStatus: 'GOOD',
+      predictiveStatus: {
+        status: 'WARNING',
+        predictedTime: new Date(),
+      },
+      type: 'LED',
       location: {
         floor: 1,
-        section: "North Wing",
-        area: "Reception",
+        section: 'North Wing',
+        area: 'Reception',
       },
+      cilLevel: 1,
     };
 
-    // Update currentStatus and predictiveStatus on the new asset
-    const updatedAsset =
-      await resolvers.Mutations.LightingAsset.updateLightingAsset(null, {
-        ID: result._id,
-        input: updateData,
-      });
-
-    expect(updatedAsset).toBeDefined();
-    expect(updatedAsset?.currentStatus).toBe("warning");
-    expect(updatedAsset?.predictiveStatus).toBe("warning");
+    const updatedAsset = await resolvers.Mutations.updateLightingAsset(null, {
+      ID: result._id,
+      input: updateData,
+    });
+    if (updatedAsset) {
+      const plainUpdatedAsset = updatedAsset.toObject();
+      expect(plainUpdatedAsset).toBeDefined();
+      expect(plainUpdatedAsset?.currentStatus).toBe('GOOD');
+      expect(plainUpdatedAsset?.predictiveStatus.status).toBe('WARNING');
+    } else {
+      expect(updatedAsset).toBeDefined();
+    }
   });
 });

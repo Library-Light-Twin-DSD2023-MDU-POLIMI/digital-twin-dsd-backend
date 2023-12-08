@@ -1,32 +1,47 @@
-import mongoose, { Document, Schema } from "mongoose";
-import { ILightingAsset } from "./LightingAsset"; // Assuming LightingAsset is in the same directory
+import mongoose, { Document, Schema } from 'mongoose';
+import { ILightingAsset } from './LightingAsset'; // Assuming LightingAsset is in the same directory
+
+const healthStatusSchema = {
+  type: Number,
+  required: true,
+  min: 1,
+  max: 5,
+};
+
+const metricSchema = new Schema({
+  value: { type: Number, required: true },
+  healthStatus: healthStatusSchema,
+});
 
 export interface ILightingAssetTimeSeriesData extends Document {
   timestamp: Date;
   metaData: Object;
-  assetId: ILightingAsset["_id"];
+  assetId: ILightingAsset['_id'];
+  power?: {
+    WATT?: typeof metricSchema;
+  };
   illuminance?: {
-    maintainedAverage?: number;
-    uniformityRatio?: number;
+    maintainedAverage?: typeof metricSchema;
+    uniformityRatio?: typeof metricSchema;
   };
   glare?: {
-    UGR?: number;
+    UGR?: typeof metricSchema;
   };
   colorRendering?: {
-    CRI?: number;
+    CRI?: typeof metricSchema;
   };
   colorTemperature?: {
-    CCT?: number;
-    Duv?: number;
+    CCT?: typeof metricSchema;
+    Duv?: typeof metricSchema;
   };
   flicker?: {
-    SVM?: number;
+    SVM?: typeof metricSchema;
   };
   colorPreference?: {
-    PVF?: number;
+    PVF?: typeof metricSchema;
   };
   photobiologicalSafety?: {
-    UV?: number;
+    UV?: typeof metricSchema;
   };
 }
 
@@ -37,39 +52,42 @@ const lightingAssetTimeSeriesDataSchema =
       metaData: {
         assetId: {
           type: Schema.Types.ObjectId,
-          ref: "LightingAsset",
+          ref: 'LightingAsset',
           required: true,
         },
       },
+      power: {
+        WATT: metricSchema,
+      },
       illuminance: {
-        maintainedAverage: Number,
-        uniformityRatio: Number,
+        maintainedAverage: metricSchema,
+        uniformityRatio: metricSchema,
       },
       glare: {
-        UGR: Number,
+        UGR: metricSchema,
       },
       colorRendering: {
-        CRI: Number,
+        CRI: metricSchema,
       },
       colorTemperature: {
-        CCT: Number,
-        Duv: Number,
+        CCT: metricSchema,
+        Duv: metricSchema,
       },
       flicker: {
-        SVM: Number,
+        SVM: metricSchema,
       },
       colorPreference: {
-        PVF: Number,
+        PVF: metricSchema,
       },
       photobiologicalSafety: {
-        UV: Number,
+        UV: metricSchema,
       },
     },
     {
       timeseries: {
-        timeField: "timestamp",
-        metaField: "metaData",
-        granularity: "hours",
+        timeField: 'timestamp',
+        metaField: 'metaData',
+        granularity: 'hours',
       },
       expireAfterSeconds: 2628000,
     }
@@ -77,7 +95,7 @@ const lightingAssetTimeSeriesDataSchema =
 
 const LightingAssetTimeSeriesData =
   mongoose.model<ILightingAssetTimeSeriesData>(
-    "LightingAssetTimeSeriesData",
+    'LightingAssetTimeSeriesData',
     lightingAssetTimeSeriesDataSchema
   );
 

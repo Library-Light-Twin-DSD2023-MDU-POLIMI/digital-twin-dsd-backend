@@ -1,6 +1,5 @@
-import mongoose, { Document, Schema } from "mongoose";
-import { IWorkOrder } from "./WorkOrder";
-
+import mongoose, { Document, Schema } from 'mongoose';
+import { IWorkOrder } from './WorkOrder';
 
 export interface Location {
   floor: number;
@@ -8,27 +7,37 @@ export interface Location {
   area: string;
 }
 
-export type CurrentStatus = "good" | "warning" | "broken";
-export type PredictiveStatus = "okay" | "warning";
-export type LightingType = "LED" | "Other";
+export type CurrentStatus = 'GOOD' | 'WARNING' | 'BROKEN';
+export type PredictiveStatus = 'OKAY' | 'WARNING';
+export type LightingType = 'LED' | 'OTHER';
+
+const PredictiveStatusTypeSchema = new Schema({
+  status: { type: String, enum: ['OKAY', 'WARNING'], required: true },
+  predictedTime: { type: Date, required: true },
+});
 export interface ILightingAsset extends Document {
   uid: string;
   currentStatus: CurrentStatus;
-  predictiveStatus: PredictiveStatus;
+  predictiveStatus: {
+    status: PredictiveStatus;
+    predictedTime: Date;
+  };
   type: LightingType;
   location: Location;
-  workOrders: IWorkOrder["_id"][];
+  cilLevel: 1 | 2;
+  workOrders: IWorkOrder['_id'][];
 }
 
 const lightingAssetSchema = new Schema<ILightingAsset>({
   uid: { type: String, required: true, unique: true },
   currentStatus: {
     type: String,
-    enum: ["good", "warning", "broken"],
+    enum: ['GOOD', 'WARNING', 'BROKEN'],
     required: true,
   },
-  predictiveStatus: { type: String, enum: ["okay", "warning"], required: true },
-  type: { type: String, enum: ["LED", "Other"], required: true },
+  predictiveStatus: { type: PredictiveStatusTypeSchema, required: true },
+  type: { type: String, enum: ['LED', 'OTHER'], required: true },
+  cilLevel: { type: Number, enum: [1, 2], required: true },
   location: {
     floor: { type: Number, required: true },
     section: { type: String, required: true },
@@ -38,14 +47,14 @@ const lightingAssetSchema = new Schema<ILightingAsset>({
     type: [
       {
         type: Schema.Types.ObjectId,
-        ref: "WorkOrder",
+        ref: 'WorkOrder',
       },
     ],
   },
 });
 
 const LightingAsset = mongoose.model<ILightingAsset>(
-  "LightingAsset",
+  'LightingAsset',
   lightingAssetSchema
 );
 
