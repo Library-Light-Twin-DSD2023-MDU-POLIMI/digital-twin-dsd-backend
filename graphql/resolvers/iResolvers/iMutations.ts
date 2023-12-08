@@ -4,6 +4,7 @@ import {
   PredictiveStatus,
   Location,
   WorkOrderStatus,
+  LightingAssetTimeSeriesData,
 } from '../../models/index';
 import { WorkOrderType } from '../../models/WorkOrder';
 
@@ -39,36 +40,76 @@ export interface IUpdateLightingAssetInput {
   cilLevel?: 1 | 2;
 }
 
+// ---------------- DEBUGGING START ---------------- //
+
+export interface ILightingAssetMeasurementMetric {
+  value: number;
+  healthStatus: number; // Assuming healthStatus is a number between 1 and 5
+}
+
 export interface ILightingAssetMeasurementInput {
   assetId: string;
   timestamp: string;
   power?: {
-    WATT?: { value: number };
+    WATT?: ILightingAssetMeasurementMetric;
   };
   illuminance?: {
-    maintainedAverage?: { value: number };
-    uniformityRatio?: { value: number };
+    maintainedAverage?: ILightingAssetMeasurementMetric;
+    uniformityRatio?: ILightingAssetMeasurementMetric;
   };
   glare?: {
-    UGR?: { value: number };
+    UGR?: ILightingAssetMeasurementMetric;
   };
   colorRendering?: {
-    CRI?: { value: number };
+    CRI?: ILightingAssetMeasurementMetric;
   };
   colorTemperature?: {
-    CCT?: { value: number };
-    Duv?: { value: number };
+    CCT?: ILightingAssetMeasurementMetric;
+    Duv?: ILightingAssetMeasurementMetric;
   };
   flicker?: {
-    SVM?: { value: number };
+    SVM?: ILightingAssetMeasurementMetric;
   };
   colorPreference?: {
-    PVF?: { value: number };
+    PVF?: ILightingAssetMeasurementMetric;
   };
   photobiologicalSafety?: {
-    UV?: { value: number };
+    UV?: ILightingAssetMeasurementMetric;
   };
 }
+
+// ---------------- DEBUGGING END ---------------- //
+
+// export interface ILightingAssetMeasurementInput {
+//   assetId: string;
+//   timestamp: string;
+//   power?: {
+//     WATT?: { value: number };
+//   };
+//   illuminance?: {
+//     maintainedAverage?: { value: number };
+//     uniformityRatio?: { value: number };
+//   };
+//   glare?: {
+//     UGR?: { value: number };
+//   };
+//   colorRendering?: {
+//     CRI?: { value: number };
+//   };
+//   colorTemperature?: {
+//     CCT?: { value: number };
+//     Duv?: { value: number };
+//   };
+//   flicker?: {
+//     SVM?: { value: number };
+//   };
+//   colorPreference?: {
+//     PVF?: { value: number };
+//   };
+//   photobiologicalSafety?: {
+//     UV?: { value: number };
+//   };
+// }
 
 export interface IAddMetricMetaData {
   metric: string;
