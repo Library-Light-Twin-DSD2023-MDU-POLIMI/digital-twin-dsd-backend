@@ -9,18 +9,18 @@
         {
             "type": "aws-sam",
             "request": "direct-invoke",
-            "name": "Invoke HelloWorldFunction",
+            "name": "Invoke GraphQLFunction (EDIT ME)",
             "invokeTarget": {
                 "target": "api",
                 "templatePath": "./template.yaml",
-                "logicalId": "HelloWorldFunction"
+                "logicalId": "GraphQLFunction"
             },
             "api": {
-                "path": "/hello",
-                "httpMethod": "post",
+                "path": "/",
+                "httpMethod": "get",
                 "payload": {
                     "json": {
-                        "body": "/"
+                        "body": "query Example { example { ID } }"
                     }
                 }
             }

@@ -2,6 +2,10 @@
     "recommendations": [
         "amazonwebservices.aws-toolkit-vscode",
         "redhat.vscode-yaml",
-        "christian-kohler.npm-intellisense"
+        "christian-kohler.npm-intellisense",
+        "tamasfe.even-better-toml",
+        "graphql.vscode-graphql",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
     ]
 }
