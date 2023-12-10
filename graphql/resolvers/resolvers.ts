@@ -285,11 +285,41 @@ const resolvers = {
       try {
         const newLightingAssetMeasurements = args.input.map(measurement => {
           const { assetId, timestamp, ...otherMeasurements } = measurement;
+
+          // Define a type for the relevant keys in otherMeasurements
+          type RelevantKeys = Omit<
+            ILightingAssetMeasurementInput,
+            'assetId' | 'timestamp'
+          >;
+
+          // Function to add healthStatus to each measurement
+          const addHealthStatus = (measurementData: any) => {
+            const updatedData: any = {};
+            for (const key in measurementData) {
+              updatedData[key] = {
+                ...measurementData[key],
+                healthStatus: 4, // Static value for healthStatus
+              };
+            }
+            return updatedData;
+          };
+
+          // Iterate over otherMeasurements and add healthStatus
+          for (const category in otherMeasurements) {
+            if (category in otherMeasurements) {
+              const categoryKey = category as keyof RelevantKeys;
+              if (otherMeasurements[categoryKey]) {
+                otherMeasurements[categoryKey] = addHealthStatus(
+                  otherMeasurements[categoryKey]
+                );
+              }
+            }
+          }
+
           return {
             metaData: {
               assetId: new mongoose.Types.ObjectId(assetId),
             },
-
             timestamp: new Date(timestamp),
             ...otherMeasurements,
           };
@@ -307,7 +337,6 @@ const resolvers = {
         );
       }
     },
-
     async addMetric(_: unknown, args: { input: IAddMetricMetaData }) {
       // Check if the metric already exists
       try {

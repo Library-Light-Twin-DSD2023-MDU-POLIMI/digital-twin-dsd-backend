@@ -1,53 +1,51 @@
-import mongoose from "mongoose";
-import { ILightingAssetMeasurementInput, ILightingAssetMeasurementMetric } from "../resolvers/iResolvers/iMutations";
-import resolvers from "../resolvers/resolvers";
+/* eslint-disable prettier/prettier */
+import mongoose from 'mongoose';
+import { ILightingAssetMeasurementInput } from '../resolvers/iResolvers/iMutations';
+import resolvers from '../resolvers/resolvers';
+
+// --------------- MOCK DATA CREATION AND INSERTION --------------- //
 
 const mockInput: ILightingAssetMeasurementInput[] = [];
+
+// Function to generate a random value within a range
+const randomValue = (min: number, max: number) => Math.random() * (max - min) + min;
 
 // Get the current date and time
 const currentDate = new Date();
 
-// Function to create a mock metric
-const createMockMetric = (value: number): ILightingAssetMeasurementMetric => ({
-  value,
-  healthStatus: Math.floor(Math.random() * 5) + 1, // Random number between 1 and 5
-});
-
+// Mock values for the input
 for (let i = 0; i < 20; i++) {
-  // Create a new Date object from the current date
-  const timestamp = new Date(currentDate.getTime());
+  const timestamp = new Date(currentDate.getTime() + i * 20 * 60000); // 20 minutes apart
 
-  // Add 20 minutes multiplied by the iterator to the current date
-  timestamp.setMinutes(currentDate.getMinutes() + 20 * i);
-
-  // Pushing a new mock data object into the mockInput array
   mockInput.push({
-    assetId: "656494140f014152e06636f3",
+    assetId: '656494140f014152e06636f3',
     timestamp: timestamp.toISOString(),
-    // Following are the mock values for different properties
-    power: { WATT: createMockMetric(50) },
-    illuminance: { 
-      maintainedAverage: createMockMetric(100),
-      uniformityRatio: createMockMetric(0.8)
+    power: { WATT: { value: randomValue(10, 100) } },
+    illuminance: {
+      maintainedAverage: { value: randomValue(100, 500) },
+      uniformityRatio: { value: randomValue(0.5, 1) }
     },
-    glare: { UGR: createMockMetric(19) },
-    colorRendering: { CRI: createMockMetric(80) },
-    colorTemperature: { 
-      CCT: createMockMetric(5000),
-      Duv: createMockMetric(0.003)
+    glare: { UGR: { value: randomValue(10, 30) } },
+    colorRendering: { CRI: { value: randomValue(70, 100) } },
+    colorTemperature: {
+      CCT: { value: randomValue(3000, 6000) },
+      Duv: { value: randomValue(0.001, 0.006) }
     },
-    flicker: { SVM: createMockMetric(0.5) },
-    colorPreference: { PVF: createMockMetric(1) },
-    photobiologicalSafety: { UV: createMockMetric(0.1) }
+    flicker: { SVM: { value: randomValue(0.1, 1) } },
+    colorPreference: { PVF: { value: randomValue(1, 5) } },
+    photobiologicalSafety: { UV: { value: randomValue(0.05, 0.2) } }
   });
 }
 
-describe("addLightingAssetMeasurements Resolver", () => {
+// --------------- TESTING --------------- //
+
+describe('addLightingAssetMeasurements Resolver', () => {
   beforeAll(async () => {
-    // Establish a connection to the MongoDB database before running tests
-    const connectionString = "mongodb+srv://application:lol@dsd.iaano1k.mongodb.net/";
+    console.log('Before con');
+    const connectionString =
+      'mongodb+srv://application:lol@dsd.iaano1k.mongodb.net/';
     await mongoose.connect(connectionString, {});
-    // Empty the collection before tests
+    // Empty the collection before testing
     await mongoose.model('LightingAssetTimeSeriesData').deleteMany({});
   });
 
@@ -56,46 +54,56 @@ describe("addLightingAssetMeasurements Resolver", () => {
     await mongoose.connection.close();
   });
 
-  test("should add 20 new lighting asset measurements", async () => {
-    // Inserting the mock data into the database
-    const insertionResult = await resolvers.Mutation.addLightingAssetMeasurements(
-      null,
-      { input: mockInput }
-    );
+  test('should add 20 new lighting asset measurements', async () => {
+    const insertionResult =
+      await resolvers.Mutation.addLightingAssetMeasurements(null, {
+        input: mockInput,
+      });
 
     // Assertions to ensure the insertion was successful
     expect(insertionResult).toBeDefined();
     expect(Array.isArray(insertionResult)).toBe(true);
     expect(insertionResult.length).toBe(mockInput.length);
-    
+
     // Verifying each field of every inserted object
     mockInput.forEach((inputObject, index) => {
       const resultObject = insertionResult[index];
 
-      // Expectations to validate the data integrity
+      // Validate the integrity of the assetId and timestamp
       expect(resultObject.metaData.assetId).toEqual(new mongoose.Types.ObjectId(inputObject.assetId));
       expect(resultObject.timestamp).toEqual(new Date(inputObject.timestamp));
 
-      // Validate nested metric structure
-      const validateMetric = (resultMetric: ILightingAssetMeasurementMetric | undefined, inputMetric: ILightingAssetMeasurementMetric | undefined) => {
-        if (resultMetric && inputMetric) {
-          expect(resultMetric.value).toBe(inputMetric.value);
-          expect(resultMetric.healthStatus).toBe(inputMetric.healthStatus);
-        }
-      };
-
-      // Apply validateMetric to each property, ensuring both result and input have the property
-      if (resultObject.power?.WATT && inputObject.power?.WATT) {
-        validateMetric(resultObject.power.WATT, inputObject.power.WATT);
+      // Validate each metric directly
+      if (inputObject.power?.WATT) {
+        expect(resultObject.power?.WATT?.value).toBe(inputObject.power.WATT.value);
       }
-      if (resultObject.illuminance?.maintainedAverage && inputObject.illuminance?.maintainedAverage) {
-        validateMetric(resultObject.illuminance.maintainedAverage, inputObject.illuminance.maintainedAverage);
+      if (inputObject.illuminance?.maintainedAverage) {
+        expect(resultObject.illuminance?.maintainedAverage?.value).toBe(inputObject.illuminance.maintainedAverage.value);
       }
-      if (resultObject.illuminance?.uniformityRatio && inputObject.illuminance?.uniformityRatio) {
-        validateMetric(resultObject.illuminance.uniformityRatio, inputObject.illuminance.uniformityRatio);
+      if (inputObject.illuminance?.uniformityRatio) {
+        expect(resultObject.illuminance?.uniformityRatio?.value).toBe(inputObject.illuminance.uniformityRatio.value);
       }
-
-      // ... Continue for other properties like glare, colorRendering, etc.
-      });
+      if (inputObject.glare?.UGR) {
+        expect(resultObject.glare?.UGR?.value).toBe(inputObject.glare.UGR.value);
+      }
+      if (inputObject.colorRendering?.CRI) {
+        expect(resultObject.colorRendering?.CRI?.value).toBe(inputObject.colorRendering.CRI.value);
+      }
+      if (inputObject.colorTemperature?.CCT) {
+        expect(resultObject.colorTemperature?.CCT?.value).toBe(inputObject.colorTemperature.CCT.value);
+      }
+      if (inputObject.colorTemperature?.Duv) {
+        expect(resultObject.colorTemperature?.Duv?.value).toBe(inputObject.colorTemperature.Duv.value);
+      }
+      if (inputObject.flicker?.SVM) {
+        expect(resultObject.flicker?.SVM?.value).toBe(inputObject.flicker.SVM.value);
+      }
+      if (inputObject.colorPreference?.PVF) {
+        expect(resultObject.colorPreference?.PVF?.value).toBe(inputObject.colorPreference.PVF.value);
+      }
+      if (inputObject.photobiologicalSafety?.UV) {
+        expect(resultObject.photobiologicalSafety?.UV?.value).toBe(inputObject.photobiologicalSafety.UV.value);
+      }
     });
+  });
 });
