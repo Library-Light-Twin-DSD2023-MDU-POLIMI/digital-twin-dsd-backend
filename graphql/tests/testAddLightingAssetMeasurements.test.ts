@@ -1,47 +1,51 @@
+/* eslint-disable prettier/prettier */
 import mongoose from 'mongoose';
 import { ILightingAssetMeasurementInput } from '../resolvers/iResolvers/iMutations';
 import resolvers from '../resolvers/resolvers';
 
+// --------------- MOCK DATA CREATION AND INSERTION --------------- //
+
 const mockInput: ILightingAssetMeasurementInput[] = [];
+
+// Function to generate a random value within a range
+const randomValue = (min: number, max: number) => Math.random() * (max - min) + min;
 
 // Get the current date and time
 const currentDate = new Date();
 
+// Mock values for the input
 for (let i = 0; i < 20; i++) {
-  // Create a new Date object from the current date
-  const timestamp = new Date(currentDate.getTime());
+  const timestamp = new Date(currentDate.getTime() + i * 20 * 60000); // 20 minutes apart
 
-  // Add 20 minutes multiplied by the iterator to the current date
-  // 20 minutes = 1/3 of an hour, for 3 measurements per hour
-  timestamp.setMinutes(currentDate.getMinutes() + 20 * i);
-
-  // Pushing a new mock data object into the mockInput array
   mockInput.push({
     assetId: '656494140f014152e06636f3',
     timestamp: timestamp.toISOString(),
-    // Following are the mock values for different properties
+    power: { WATT: { value: randomValue(10, 100) } },
     illuminance: {
-      maintainedAverage: {
-        value: 100,
-      },
-      uniformityRatio: { value: 0.8 },
+      maintainedAverage: { value: randomValue(100, 500) },
+      uniformityRatio: { value: randomValue(0.5, 1) }
     },
-    glare: { UGR: { value: 19 } },
-    colorRendering: { CRI: { value: 80 } },
-    colorTemperature: { CCT: { value: 5000 }, Duv: { value: 0.003 } },
-    flicker: { SVM: { value: 0.5 } },
-    colorPreference: { PVF: { value: 1 } },
-    photobiologicalSafety: { UV: { value: 0.1 } },
+    glare: { UGR: { value: randomValue(10, 30) } },
+    colorRendering: { CRI: { value: randomValue(70, 100) } },
+    colorTemperature: {
+      CCT: { value: randomValue(3000, 6000) },
+      Duv: { value: randomValue(0.001, 0.006) }
+    },
+    flicker: { SVM: { value: randomValue(0.1, 1) } },
+    colorPreference: { PVF: { value: randomValue(1, 5) } },
+    photobiologicalSafety: { UV: { value: randomValue(0.05, 0.2) } }
   });
 }
 
+// --------------- TESTING --------------- //
+
 describe('addLightingAssetMeasurements Resolver', () => {
   beforeAll(async () => {
-    // Establish a connection to the MongoDB database before running tests
+    console.log('Before con');
     const connectionString =
       'mongodb+srv://application:lol@dsd.iaano1k.mongodb.net/';
     await mongoose.connect(connectionString, {});
-    // Empty the collection before tests
+    // Empty the collection before testing
     await mongoose.model('LightingAssetTimeSeriesData').deleteMany({});
   });
 
@@ -51,7 +55,6 @@ describe('addLightingAssetMeasurements Resolver', () => {
   });
 
   test('should add 20 new lighting asset measurements', async () => {
-    // Inserting the mock data into the database
     const insertionResult =
       await resolvers.Mutation.addLightingAssetMeasurements(null, {
         input: mockInput,
@@ -65,34 +68,42 @@ describe('addLightingAssetMeasurements Resolver', () => {
     // Verifying each field of every inserted object
     mockInput.forEach((inputObject, index) => {
       const resultObject = insertionResult[index];
-      // Expectations to validate the data integrity
-      expect(resultObject.metaData.assetId).toEqual(
-        new mongoose.Types.ObjectId(inputObject.assetId)
-      );
+
+      // Validate the integrity of the assetId and timestamp
+      expect(resultObject.metaData.assetId).toEqual(new mongoose.Types.ObjectId(inputObject.assetId));
       expect(resultObject.timestamp).toEqual(new Date(inputObject.timestamp));
-      expect(resultObject.illuminance?.maintainedAverage).toBe(
-        inputObject.illuminance?.maintainedAverage
-      );
-      expect(resultObject.illuminance?.uniformityRatio).toBe(
-        inputObject.illuminance?.uniformityRatio
-      );
-      expect(resultObject.glare?.UGR).toBe(inputObject.glare?.UGR);
-      expect(resultObject.colorRendering?.CRI).toBe(
-        inputObject.colorRendering?.CRI
-      );
-      expect(resultObject.colorTemperature?.CCT).toBe(
-        inputObject.colorTemperature?.CCT
-      );
-      expect(resultObject.colorTemperature?.Duv).toBe(
-        inputObject.colorTemperature?.Duv
-      );
-      expect(resultObject.flicker?.SVM).toBe(inputObject.flicker?.SVM);
-      expect(resultObject.colorPreference?.PVF).toBe(
-        inputObject.colorPreference?.PVF
-      );
-      expect(resultObject.photobiologicalSafety?.UV).toBe(
-        inputObject.photobiologicalSafety?.UV
-      );
+
+      // Validate each metric directly
+      if (inputObject.power?.WATT) {
+        expect(resultObject.power?.WATT?.value).toBe(inputObject.power.WATT.value);
+      }
+      if (inputObject.illuminance?.maintainedAverage) {
+        expect(resultObject.illuminance?.maintainedAverage?.value).toBe(inputObject.illuminance.maintainedAverage.value);
+      }
+      if (inputObject.illuminance?.uniformityRatio) {
+        expect(resultObject.illuminance?.uniformityRatio?.value).toBe(inputObject.illuminance.uniformityRatio.value);
+      }
+      if (inputObject.glare?.UGR) {
+        expect(resultObject.glare?.UGR?.value).toBe(inputObject.glare.UGR.value);
+      }
+      if (inputObject.colorRendering?.CRI) {
+        expect(resultObject.colorRendering?.CRI?.value).toBe(inputObject.colorRendering.CRI.value);
+      }
+      if (inputObject.colorTemperature?.CCT) {
+        expect(resultObject.colorTemperature?.CCT?.value).toBe(inputObject.colorTemperature.CCT.value);
+      }
+      if (inputObject.colorTemperature?.Duv) {
+        expect(resultObject.colorTemperature?.Duv?.value).toBe(inputObject.colorTemperature.Duv.value);
+      }
+      if (inputObject.flicker?.SVM) {
+        expect(resultObject.flicker?.SVM?.value).toBe(inputObject.flicker.SVM.value);
+      }
+      if (inputObject.colorPreference?.PVF) {
+        expect(resultObject.colorPreference?.PVF?.value).toBe(inputObject.colorPreference.PVF.value);
+      }
+      if (inputObject.photobiologicalSafety?.UV) {
+        expect(resultObject.photobiologicalSafety?.UV?.value).toBe(inputObject.photobiologicalSafety.UV.value);
+      }
     });
   });
 });
