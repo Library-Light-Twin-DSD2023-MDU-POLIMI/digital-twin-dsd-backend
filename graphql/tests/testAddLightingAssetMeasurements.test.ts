@@ -41,7 +41,6 @@ for (let i = 0; i < 20; i++) {
 
 describe('addLightingAssetMeasurements Resolver', () => {
   beforeAll(async () => {
-    console.log('Before con');
     const connectionString =
       'mongodb+srv://application:lol@dsd.iaano1k.mongodb.net/';
     await mongoose.connect(connectionString, {});
