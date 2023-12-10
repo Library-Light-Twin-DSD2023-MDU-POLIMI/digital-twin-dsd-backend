@@ -331,6 +331,7 @@ const resolvers = {
           );
         return lightingAssetTimeSeriesData;
       } catch (error) {
+        console.log(error);
         throw new GraphQLError(
           'Was not able to add new lighting asset measurements'
         );
