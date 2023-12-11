@@ -230,7 +230,7 @@ const resolvers = {
     ) {
       try {
         // Prepare the update object
-        let updateObj: { [key: string]: any } = {};
+        const updateObj: { [key: string]: any } = {};
 
         // Handle top-level fields except for nested objects
         for (const [key, value] of Object.entries(args.input)) {
@@ -327,13 +327,13 @@ const resolvers = {
       }
     },
 
-    updateMetric: async (
+    async updateMetric(
       _: unknown,
       args: { ID: string; input: IUpdateMetricMetaData }
-    ) => {
+    ) {
       try {
         // Define the type for updateObj
-        let updateObj: { [key: string]: any } = {};
+        const updateObj: { [key: string]: any } = {};
 
         // Handle top-level fields except 'scale'
         for (const [key, value] of Object.entries(args.input)) {
