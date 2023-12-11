@@ -230,7 +230,7 @@ const resolvers = {
     ) {
       try {
         // Prepare the update object
-        let updateObj: { [key: string]: any } = {};
+        const updateObj: { [key: string]: any } = {};
 
         // Handle top-level fields except for nested objects
         for (const [key, value] of Object.entries(args.input)) {
@@ -285,11 +285,41 @@ const resolvers = {
       try {
         const newLightingAssetMeasurements = args.input.map(measurement => {
           const { assetId, timestamp, ...otherMeasurements } = measurement;
+
+          // Define a type for the relevant keys in otherMeasurements
+          type RelevantKeys = Omit<
+            ILightingAssetMeasurementInput,
+            'assetId' | 'timestamp'
+          >;
+
+          // Function to add healthStatus to each measurement
+          const addHealthStatus = (measurementData: any) => {
+            const updatedData: any = {};
+            for (const key in measurementData) {
+              updatedData[key] = {
+                ...measurementData[key],
+                healthStatus: 4, // Static value for healthStatus
+              };
+            }
+            return updatedData;
+          };
+
+          // Iterate over otherMeasurements and add healthStatus
+          for (const category in otherMeasurements) {
+            if (category in otherMeasurements) {
+              const categoryKey = category as keyof RelevantKeys;
+              if (otherMeasurements[categoryKey]) {
+                otherMeasurements[categoryKey] = addHealthStatus(
+                  otherMeasurements[categoryKey]
+                );
+              }
+            }
+          }
+
           return {
             metaData: {
               assetId: new mongoose.Types.ObjectId(assetId),
             },
-
             timestamp: new Date(timestamp),
             ...otherMeasurements,
           };
@@ -301,13 +331,12 @@ const resolvers = {
           );
         return lightingAssetTimeSeriesData;
       } catch (error) {
-        console.error('Error in addWorkOrder resolver:', error);
+        console.error('Error in addLightingAssetMeasurements resolver:', error);
         throw new GraphQLError(
-          'Was not able to add a new work order: ' + error
+          'Was not able to add new measurements: ' + error
         );
       }
     },
-
     async addMetric(_: unknown, args: { input: IAddMetricMetaData }) {
       // Check if the metric already exists
       try {
@@ -334,7 +363,7 @@ const resolvers = {
     ) => {
       try {
         // Define the type for updateObj
-        let updateObj: { [key: string]: any } = {};
+        const updateObj: { [key: string]: any } = {};
 
         // Handle top-level fields except 'scale'
         for (const [key, value] of Object.entries(args.input)) {
