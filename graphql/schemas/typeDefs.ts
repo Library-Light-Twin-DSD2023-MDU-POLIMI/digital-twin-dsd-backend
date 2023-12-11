@@ -284,7 +284,7 @@ const typeDefs = gql`
     _id: ID!
     workOrderID: String!
     lightingAssetID: ID!
-    type: WorkOrderType!
+    workOrderType: WorkOrderType!
     workOrderStatus: WorkOrderStatus!
     description: String!
     comment: String
@@ -384,7 +384,7 @@ const typeDefs = gql`
   input AddWorkOrderInput {
     workOrderID: String!
     lightingAssetID: ID!
-    type: WorkOrderType!
+    workOrderType: WorkOrderType!
     workOrderStatus: WorkOrderStatus!
     description: String!
     comment: String
@@ -395,9 +395,9 @@ const typeDefs = gql`
   }
 
   input UpdateWorkOrderInput {
-    workOrderID: String
-    lightingAssetID: ID
-    type: WorkOrderType
+    workOrderID: String!
+    lightingAssetID: ID!
+    workOrderType: WorkOrderType
     workOrderStatus: WorkOrderStatus
     description: String
     comment: String
@@ -434,15 +434,15 @@ const typeDefs = gql`
     addLightingAsset(input: AddLightingAssetInput): LightingAsset
     updateLightingAsset(id: ID!, input: UpdateLightingAssetInput): LightingAsset
     removeLightingAsset(id: ID!): Boolean
-    addWorkOrder(input: AddWorkOrderInput!): WorkOrder
-    removeWorkOrder(id: ID!): Boolean
-    updateWorkOrder(id: ID!, input: UpdateWorkOrderInput!): WorkOrder
     addLightingAssetMeasurements(
       inputs: [LightingAssetMeasurementInput!]!
     ): [LightingAssetTimeSeriesData]
     addMetric(input: MetricMetaDataInput): Metric
     updateMetric(id: ID!, input: MetricMetaDataInput): Metric
     removeMetric(id: ID!): Metric
+    addWorkOrder(input: AddWorkOrderInput!): WorkOrder
+    removeWorkOrder(id: ID!): Boolean
+    updateWorkOrder(id: ID!, input: UpdateWorkOrderInput!): WorkOrder
   }
 `;
 
