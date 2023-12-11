@@ -45,10 +45,12 @@ const typeDefs = gql`
   }
 
   input LightingAssetFilter {
-    location: LocationInput
+    floor: Int
+    section: String
+    area: String
     lightingType: LightingType
     currentStatus: CurrentStatus
-    predictedStatus: PredictedStatusTypeInput
+    predictedStatus: PredictiveStatus
   }
 
   #Location
@@ -93,7 +95,6 @@ const typeDefs = gql`
 
   input WATTInput {
     value: Float
-    healthStatus: Int
   }
 
   #Illuminance
@@ -142,7 +143,6 @@ const typeDefs = gql`
 
   input UGRInput {
     value: Float
-    healthStatus: Int
   }
 
   # ColorRendering
@@ -161,7 +161,6 @@ const typeDefs = gql`
 
   input CRIInput {
     value: Float
-    healthStatus: Int
   }
 
   #ColorTemperature
@@ -182,7 +181,6 @@ const typeDefs = gql`
 
   input CCTInput {
     value: Float
-    healthStatus: Int
   }
 
   type Duv {
@@ -192,7 +190,6 @@ const typeDefs = gql`
 
   input DuvInput {
     value: Float
-    healthStatus: Int
   }
 
   #Flicker
@@ -211,7 +208,6 @@ const typeDefs = gql`
 
   input SVMInput {
     value: Float
-    healthStatus: Int
   }
 
   #ColorPreference
@@ -248,7 +244,6 @@ const typeDefs = gql`
 
   input PhotobiologicalSafetyUVInput {
     value: Float
-    healthStatus: Int
   }
 
   type LightingAssetAverageData {
@@ -274,7 +269,7 @@ const typeDefs = gql`
   type Scale {
     tooHigh: String
     perfect: String
-    good: String
+    good: String!
     mid: String
     tooLow: String
   }
@@ -287,11 +282,11 @@ const typeDefs = gql`
     type: WorkOrderType!
     workOrderStatus: WorkOrderStatus!
     description: String!
-    comment: String
+    comment: String!
     location: Location!
     dateOfMaintenance: String!
-    executionStartDate: String
-    executedDate: String
+    executionStartDate: String!
+    executedDate: String!
   }
 
   enum WorkOrderType {
@@ -306,6 +301,11 @@ const typeDefs = gql`
     NOTCOMPLETED
   }
 
+  enum CILLevel {
+    I
+    II
+  }
+
   # Define Query and/or Mutation types
 
   # Input types and enums for LightingAsset
@@ -315,6 +315,7 @@ const typeDefs = gql`
     currentStatus: CurrentStatus!
     predictiveStatus: PredictedStatusTypeInput
     type: LightingType!
+    cilLevel: CILLevel!
     location: LocationInput!
   }
 
@@ -322,7 +323,9 @@ const typeDefs = gql`
     uid: String!
     currentStatus: CurrentStatus
     predictiveStatus: PredictedStatusTypeInput
+    type: LightingType
     location: LocationInput
+    cilLevel: CILLevel
   }
 
   # Input types and enums for LightingAssetTimeSeriesData
@@ -374,7 +377,7 @@ const typeDefs = gql`
   input ScaleInput {
     tooHigh: String
     perfect: String
-    good: String
+    good: String!
     mid: String
     tooLow: String
   }
@@ -434,14 +437,14 @@ const typeDefs = gql`
     addLightingAsset(input: AddLightingAssetInput): LightingAsset
     updateLightingAsset(id: ID!, input: UpdateLightingAssetInput): LightingAsset
     removeLightingAsset(id: ID!): Boolean
-    addWorkOrder(input: AddWorkOrderInput!): WorkOrder
-    removeWorkOrder(id: ID!): Boolean
-    updateWorkOrder(id: ID!, input: UpdateWorkOrderInput!): WorkOrder
     addLightingAssetMeasurements(
       inputs: [LightingAssetMeasurementInput!]!
     ): [LightingAssetTimeSeriesData]
     addMetric(input: MetricMetaDataInput): Metric
     updateMetric(id: ID!, input: MetricMetaDataInput): Metric
+    addWorkOrder(input: AddWorkOrderInput!): WorkOrder
+    removeWorkOrder(id: ID!): Boolean
+    updateWorkOrder(id: ID!, input: UpdateWorkOrderInput!): WorkOrder
     removeMetric(id: ID!): Metric
   }
 `;
