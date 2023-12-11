@@ -366,8 +366,16 @@ const typeDefs = gql`
 
   # Input types and enums for MetricMetaData
 
-  input MetricMetaDataInput {
+  input AddMetricMetaDataInput {
     metric: String!
+    unit: String
+    scale: ScaleInput!
+    information: String
+    tooltipSummary: String
+  }
+
+  input UpdateMetricMetaDataInput {
+    metric: String
     unit: String
     scale: ScaleInput
     information: String
@@ -440,13 +448,14 @@ const typeDefs = gql`
     addLightingAssetMeasurements(
       inputs: [LightingAssetMeasurementInput!]!
     ): [LightingAssetTimeSeriesData]
-    addMetric(input: MetricMetaDataInput): Metric
-    updateMetric(id: ID!, input: MetricMetaDataInput): Metric
+    addMetric(input: AddMetricMetaDataInput): Metric
+    updateMetric(id: ID!, input: UpdateMetricMetaDataInput): Metric
+    removeMetric(id: ID!): Boolean
     addWorkOrder(input: AddWorkOrderInput!): WorkOrder
-    removeWorkOrder(id: ID!): Boolean
     updateWorkOrder(id: ID!, input: UpdateWorkOrderInput!): WorkOrder
-    removeMetric(id: ID!): Metric
+    removeWorkOrder(id: ID!): Boolean
   }
 `;
 
+// TODO when sure, make sure to remove and deal with all todos in comments, so everything will be cleanly dealt with
 export default typeDefs;

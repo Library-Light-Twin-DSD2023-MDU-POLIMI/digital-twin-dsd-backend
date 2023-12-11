@@ -95,17 +95,18 @@ export interface IUpdateMetricMetaData {
 export interface IAddWorkOrderInput {
   workOrderID: string;
   lightingAssetID: string;
+  type: WorkOrderType;
   workOrderStatus: WorkOrderStatus;
   description: string;
   comment?: string;
   location: Location;
   dateOfMaintenance: Date;
-  executionStartDate: Date;
-  executedDate: Date;
+  executionStartDate?: Date;
+  executedDate?: Date;
 }
 export interface IUpdateWorkOrderInput {
-  workOrderID: string;
-  lightingAssetID: string;
+  workOrderID?: string;
+  lightingAssetID?: string;
   type?: WorkOrderType;
   workOrderStatus?: WorkOrderStatus;
   description?: string;
