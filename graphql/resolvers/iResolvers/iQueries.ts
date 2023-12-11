@@ -2,7 +2,7 @@ import {
   CurrentStatus,
   LightingType,
   PredictiveStatus,
-} from "../../models/index";
+} from '../../models/index';
 
 export interface ISortAndPaginate {
   limit: number;
@@ -22,6 +22,6 @@ export interface ILightingAssetFilter {
 export interface ITimeSeriesDataThresholds {
   [key: string]: {
     thresholdValue: number;
-    comparison: "LESS" | "MORE" | "EQUAL";
+    comparison: 'LESS' | 'MORE' | 'EQUAL';
   };
 }
