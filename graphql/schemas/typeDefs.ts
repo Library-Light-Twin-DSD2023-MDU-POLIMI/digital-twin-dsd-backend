@@ -279,7 +279,7 @@ const typeDefs = gql`
     _id: ID!
     workOrderID: String!
     lightingAssetID: ID!
-    type: WorkOrderType!
+    workOrderType: WorkOrderType!
     workOrderStatus: WorkOrderStatus!
     description: String!
     comment: String!
@@ -395,7 +395,7 @@ const typeDefs = gql`
   input AddWorkOrderInput {
     workOrderID: String!
     lightingAssetID: ID!
-    type: WorkOrderType!
+    workOrderType: WorkOrderType!
     workOrderStatus: WorkOrderStatus!
     description: String!
     comment: String
@@ -406,9 +406,9 @@ const typeDefs = gql`
   }
 
   input UpdateWorkOrderInput {
-    workOrderID: String
-    lightingAssetID: ID
-    type: WorkOrderType
+    workOrderID: String!
+    lightingAssetID: ID!
+    workOrderType: WorkOrderType
     workOrderStatus: WorkOrderStatus
     description: String
     comment: String
@@ -457,5 +457,4 @@ const typeDefs = gql`
   }
 `;
 
-// TODO when sure, make sure to remove and deal with all todos in comments, so everything will be cleanly dealt with
 export default typeDefs;

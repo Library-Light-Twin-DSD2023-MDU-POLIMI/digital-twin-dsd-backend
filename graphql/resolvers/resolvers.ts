@@ -199,7 +199,7 @@ const resolvers = {
       return await WorkOrder.findById(ID);
     },
 
-    async workOrders(_: unknown) {
+    async workOrders() {
       return await WorkOrder.find();
     },
   },
@@ -285,11 +285,41 @@ const resolvers = {
       try {
         const newLightingAssetMeasurements = args.input.map(measurement => {
           const { assetId, timestamp, ...otherMeasurements } = measurement;
+
+          // Define a type for the relevant keys in otherMeasurements
+          type RelevantKeys = Omit<
+            ILightingAssetMeasurementInput,
+            'assetId' | 'timestamp'
+          >;
+
+          // Function to add healthStatus to each measurement
+          const addHealthStatus = (measurementData: any) => {
+            const updatedData: any = {};
+            for (const key in measurementData) {
+              updatedData[key] = {
+                ...measurementData[key],
+                healthStatus: 4, // Static value for healthStatus
+              };
+            }
+            return updatedData;
+          };
+
+          // Iterate over otherMeasurements and add healthStatus
+          for (const category in otherMeasurements) {
+            if (category in otherMeasurements) {
+              const categoryKey = category as keyof RelevantKeys;
+              if (otherMeasurements[categoryKey]) {
+                otherMeasurements[categoryKey] = addHealthStatus(
+                  otherMeasurements[categoryKey]
+                );
+              }
+            }
+          }
+
           return {
             metaData: {
               assetId: new mongoose.Types.ObjectId(assetId),
             },
-
             timestamp: new Date(timestamp),
             ...otherMeasurements,
           };
@@ -301,12 +331,12 @@ const resolvers = {
           );
         return lightingAssetTimeSeriesData;
       } catch (error) {
+        console.error('Error in addLightingAssetMeasurements resolver:', error);
         throw new GraphQLError(
-          'Was not able to add new lighting asset measurements'
+          'Was not able to add new measurements: ' + error
         );
       }
     },
-
     async addMetric(_: unknown, args: { input: IAddMetricMetaData }) {
       // Check if the metric already exists
       try {
@@ -378,24 +408,29 @@ const resolvers = {
 
     async addWorkOrder(_: unknown, args: { input: IAddWorkOrderInput }) {
       try {
-        // Create and save the new WorkOrder
-        const newWorkOrder = new WorkOrder(args.input);
-        const savedWorkOrder = await newWorkOrder.save();
-
-        // If the WorkOrder has a lightingAssetID, update the corresponding LightingAsset
-        if (savedWorkOrder.lightingAssetID) {
-          await LightingAsset.findByIdAndUpdate(
-            savedWorkOrder.lightingAssetID,
-            { $addToSet: { workOrders: savedWorkOrder._id } }
-          );
+        // Check if the corresponding LightingAsset exists
+        const lightingAsset = await LightingAsset.findById(
+          args.input.lightingAssetID
+        );
+        if (!lightingAsset) {
+          throw new Error('LightingAsset not found');
         }
+
+        // Create and save the new WorkOrder
+        const newWorkOrder = new WorkOrder({
+          ...args.input,
+        });
+        const savedWorkOrder = await newWorkOrder.save();
+        // Update the corresponding LightingAsset
+        await LightingAsset.findByIdAndUpdate(savedWorkOrder.lightingAssetID, {
+          $addToSet: { workOrders: savedWorkOrder._id },
+        });
 
         return savedWorkOrder;
       } catch (error) {
-        throw new GraphQLError('Was not able to add a new work order');
+        throw new GraphQLError('Was not able to add a new work order' + error);
       }
     },
-
     async updateWorkOrder(
       _: unknown,
       args: { ID: string; input: IUpdateWorkOrderInput }
@@ -412,9 +447,26 @@ const resolvers = {
           }
         }
 
+        // Define the type for updateObj
+        let updateObj: { [key: string]: any } = {};
+
+        // Handle top-level fields except 'location'
+        for (const [key, value] of Object.entries(args.input)) {
+          if (key !== 'location') {
+            updateObj[key] = value;
+          }
+        }
+
+        // Handle nested 'location' fields
+        if (args.input.location) {
+          for (const [key, value] of Object.entries(args.input.location)) {
+            updateObj[`location.${key}`] = value; // Update nested fields using dot notation
+          }
+        }
+
         const updatedWorkOrder = await WorkOrder.findByIdAndUpdate(
           args.ID,
-          args.input,
+          { $set: updateObj }, // Use $set to update fields
           { new: true }
         );
 
@@ -422,24 +474,14 @@ const resolvers = {
           throw new GraphQLError('WorkOrder not found');
         }
 
-        if (args.input.lightingAssetID) {
-          // Remove WorkOrder ID from the old LightingAsset
-          await LightingAsset.updateOne(
-            { workOrders: args.ID },
-            { $pull: { workOrders: args.ID } }
-          );
+        // Existing logic for handling lightingAssetID updates
+        // ...
 
-          // Add WorkOrder ID to the new LightingAsset
-          await LightingAsset.findByIdAndUpdate(args.input.lightingAssetID, {
-            $addToSet: { workOrders: args.ID },
-          });
-        }
         return updatedWorkOrder;
       } catch (error) {
         throw new GraphQLError('Was not able to update work order');
       }
     },
-
     async removeWorkOrder(_: unknown, { ID }: { ID: string }) {
       try {
         const result = (await WorkOrder.deleteOne({ _id: ID })).deletedCount;
