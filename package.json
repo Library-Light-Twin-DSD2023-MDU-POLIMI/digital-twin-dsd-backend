@@ -7,15 +7,17 @@
   "author": "",
   "license": "",
   "scripts": {
-    "compile": "tsc",
-    "dev": "rm -r bin && npm run compile && node ./bin/debug.js"
+    "deploy": "serverless deploy --region eu-north-1",
+    "test": "jest",
+    "start": "serverless offline --region eu-north-1"
   },
   "dependencies": {
     "@apollo/server": "^4.9.5",
     "@as-integrations/aws-lambda": "^3.1.0",
     "aws-lambda": "^1.0.7",
     "mongoose": "^8.0.1",
-    "serverless": "^3.38.0"
+    "serverless": "^3.38.0",
+    "serverless-offline": "^13.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.23.5",

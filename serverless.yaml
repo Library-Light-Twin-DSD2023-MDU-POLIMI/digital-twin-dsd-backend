@@ -20,3 +20,4 @@ functions:
 # Omit the following lines if you aren't using TS!
 plugins:
   - serverless-plugin-typescript
+  - serverless-offline
