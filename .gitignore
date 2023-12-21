@@ -210,3 +210,6 @@ $RECYCLE.BIN/
 # serverless and its typescript plugin temp folders
 .serverless
 .build
+
+# bin folder for compiled typescript through tsc
+bin
