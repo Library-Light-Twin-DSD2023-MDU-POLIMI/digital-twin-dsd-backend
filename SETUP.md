@@ -3,13 +3,11 @@
 ## Previous installation
 
 * [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-* [aws-sam-cli](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html)
 * [VSCode](https://code.visualstudio.com/)
 * [git](https://git-scm.com/downloads)
 * [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 * nodejs
 * typescript
-* docker (needed in order to run the backend locally, for development)
 
 
 
@@ -21,7 +19,9 @@
 2. Install the recommended extensions (workspace recommendations)
    
    ![Get the ones from the WORKSPACE RECOMMENDATIONS section](.images/image.png)
-3. When you do this the screen for the AWS extension will open. To sign
+
+
+3. When you do this the screen for the AWS extension will open ^[You don need to do this anymore, this is only necesary to control, some of the aws functions directly from the vscode ui]. To sign
    in with the provided credentials, we will go to AWS Explorer, then open
    "Or add IAM User Credentials" and enter you username in the profile
    name, and the 2 credentials provided for login.
