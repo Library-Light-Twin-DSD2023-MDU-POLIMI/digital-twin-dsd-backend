@@ -207,5 +207,9 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/osx,node,linux,windows,sam
 
-## The result of tsc arent necesary in this repository
-graphql/bin/
+# serverless and its typescript plugin temp folders
+.serverless
+.build
+
+# bin folder for compiled typescript through tsc
+bin
