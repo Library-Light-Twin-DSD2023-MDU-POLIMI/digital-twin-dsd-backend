@@ -4,6 +4,7 @@ import {
   PredictiveStatus,
   Location,
   WorkOrderStatus,
+  CILLevel,
 } from '../../models/index';
 import { WorkOrderType } from '../../models/WorkOrder';
 
@@ -15,7 +16,7 @@ export interface IAddLightingAssetInput {
     predictedTime: Date;
   };
   type: LightingType;
-  cilLevel: 1 | 2;
+  cilLevel: CILLevel;
   location: Location;
 }
 
@@ -28,7 +29,7 @@ export interface IUpdateLightingAssetInput {
   };
   type?: LightingType;
   location?: Location;
-  cilLevel?: 1 | 2;
+  cilLevel?: CILLevel;
 }
 
 export interface ILightingAssetMeasurementInput {
