@@ -44,9 +44,7 @@ const typeDefs = `#graphql
   }
 
   input LightingAssetFilter {
-    floor: Int
-    section: String
-    area: String
+    location: LocationInputOpt!
     lightingType: LightingType
     currentStatus: CurrentStatus
     predictedStatus: PredictiveStatus
@@ -63,6 +61,12 @@ const typeDefs = `#graphql
     floor: Int!
     section: String!
     area: String!
+  }
+
+  input LocationInputOpt {
+    floor: Int
+    section: String
+    area: String
   }
   #LightingAssetTimeSeriesData
   type LightingAssetTimeSeriesData {
@@ -323,7 +327,7 @@ const typeDefs = `#graphql
     currentStatus: CurrentStatus
     predictiveStatus: PredictedStatusTypeInput
     type: LightingType
-    location: LocationInput
+    location: LocationInputOpt!
     cilLevel: CILLevel
   }
 
@@ -411,7 +415,7 @@ const typeDefs = `#graphql
     workOrderStatus: WorkOrderStatus
     description: String
     comment: String
-    location: LocationInput
+    location: LocationInputOpt!
     dateOfMaintenance: String
     excecutionStartDate: String
     excecutedDate: String
