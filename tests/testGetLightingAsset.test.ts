@@ -20,31 +20,27 @@ const mockInput: IAddLightingAssetInput = {
   cilLevel: 1,
 };
 
-describe('getLightingAssetTimeSeriesData Resolver', () => {
+describe('addLightingAsset Resolver', () => {
   beforeAll(async () => {
     const connectionString =
-      'mongodb+srv://application:lol@dsd.iaano1k.mongodb.net/';
-      await mongoose.connect(connectionString, {});
+      'mongodb+srv://application:lol@dsd.iaano1k.mongodb.net/test';
+    await mongoose.connect(connectionString, {});
   });
 
   afterAll(async () => {
     await mongoose.connection.close();
   });
 
-  test('should retrieve average data for a lighting asset within a time range', async () => {
-
-    const assetId = 'YOUR_ASSET_ID';
-    const startTime = '2023-01-01T00:00:00Z';
-    const endTime = '2023-12-31T23:59:59Z';
-
-    const averageDataResult = await resolvers.Query.getAverageLightingAssetData(null, {
-      assetId,
-      startTime,
-      endTime,
+  test('should get the added lighting asset', async () => {
+    const result = await resolvers.Mutation.addLightingAsset(null, {
+      input: mockInput,
     });
 
-    expect(averageDataResult).toBeDefined();
-    expect(Array.isArray(averageDataResult)).toBe(true);
+    // Get LightingAsset by ID
+    const dbAsset = await LightingAsset.findById(result._id);
 
-    });
+    expect(dbAsset).toBeDefined();
+    expect(dbAsset?.uid).toEqual(result.uid);
+    expect(dbAsset?._id).toEqual(result._id);
+  });
 });

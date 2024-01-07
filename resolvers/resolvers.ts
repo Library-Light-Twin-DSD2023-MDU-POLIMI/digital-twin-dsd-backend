@@ -127,7 +127,37 @@ const resolvers = {
       const startDate = new Date(startTime);
       const endDate = new Date(endTime);
 
-      // Aggregation pipeline
+      // Aggregation pipeline for debugging
+      const debugPipeline = [
+        {
+          $match: {
+            'metaData.assetId': new mongoose.Types.ObjectId(assetId),
+            timestamp: { $gte: startDate, $lte: endDate },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            timestamp: 1,
+            illuminance: 1,
+            glare: 1,
+            colorRendering: 1,
+            colorTemperature: 1,
+            flicker: 1,
+            colorPreference: 1,
+            photobiologicalSafety: 1,
+            // Include other fields as needed for debugging
+          },
+        },
+      ];
+
+      // Execute the debugging pipeline
+      const debugResult = await LightingAssetTimeSeriesData.aggregate(
+        debugPipeline
+      );
+      console.log('Debugging Matched Documents:', debugResult);
+
+      // Original aggregation pipeline
       const pipeline = [
         {
           $match: {
@@ -141,14 +171,16 @@ const resolvers = {
               day: { $dayOfYear: '$timestamp' },
               year: { $year: '$timestamp' },
             },
-            averageIlluminance: { $avg: '$illuminance.maintainedAverage' },
-            averageGlare: { $avg: '$glare.UGR' },
-            averageColorRendering: { $avg: '$colorRendering.CRI' },
-            averageColorTemperature: { $avg: '$colorTemperature.CCT' },
-            averageFlicker: { $avg: '$flicker.SVM' },
-            averageColorPreference: { $avg: '$colorPreference.PVF' },
+            averageIlluminance: {
+              $avg: '$illuminance.maintainedAverage.value',
+            },
+            averageGlare: { $avg: '$glare.UGR.value' },
+            averageColorRendering: { $avg: '$colorRendering.CRI.value' },
+            averageColorTemperature: { $avg: '$colorTemperature.CCT.value' },
+            averageFlicker: { $avg: '$flicker.SVM.value' },
+            averageColorPreference: { $avg: '$colorPreference.PVF.value' },
             averagePhotobiologicalSafety: {
-              $avg: '$photobiologicalSafety.UV',
+              $avg: '$photobiologicalSafety.UV.value',
             },
           },
         },
@@ -173,7 +205,7 @@ const resolvers = {
         },
       ];
 
-      // Execute the aggregation pipeline
+      // Execute the original aggregation pipeline
       const result = await LightingAssetTimeSeriesData.aggregate(pipeline);
 
       // Format the result to match the GraphQL type 'LightingAssetAverageData'
@@ -188,6 +220,7 @@ const resolvers = {
         averagePhotobiologicalSafety: item.averagePhotobiologicalSafety,
       }));
     },
+
     async metrics() {
       return await MetricMetaData.find();
     },
@@ -448,7 +481,7 @@ const resolvers = {
         }
 
         // Define the type for updateObj
-        let updateObj: { [key: string]: any } = {};
+        const updateObj: { [key: string]: unknown } = {};
 
         // Handle top-level fields except 'location'
         for (const [key, value] of Object.entries(args.input)) {

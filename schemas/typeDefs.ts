@@ -1,5 +1,4 @@
-import { gql } from 'apollo-server-lambda';
-const typeDefs = gql`
+const typeDefs = `#graphql
   #LightingAsset
   type LightingAsset {
     _id: ID!
