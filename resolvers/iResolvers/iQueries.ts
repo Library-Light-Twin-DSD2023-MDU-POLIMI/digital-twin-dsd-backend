@@ -11,9 +11,11 @@ export interface ISortAndPaginate {
 }
 
 export interface ILightingAssetFilter {
-  floor?: number;
-  section?: string;
-  area?: string;
+  location: {
+    floor?: number;
+    section?: string;
+    area?: string;
+  };
   lightingType?: LightingType;
   currentStatus?: CurrentStatus;
   predictedStatus?: PredictiveStatus;
