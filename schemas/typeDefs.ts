@@ -304,11 +304,6 @@ const typeDefs = `#graphql
     NOTCOMPLETED
   }
 
-  enum CILLevel {
-    I
-    II
-  }
-
   # Define Query and/or Mutation types
 
   # Input types and enums for LightingAsset
@@ -318,7 +313,7 @@ const typeDefs = `#graphql
     currentStatus: CurrentStatus!
     predictiveStatus: PredictedStatusTypeInput
     type: LightingType!
-    cilLevel: CILLevel!
+    cilLevel: Int
     location: LocationInput!
   }
 
@@ -328,7 +323,7 @@ const typeDefs = `#graphql
     predictiveStatus: PredictedStatusTypeInput
     type: LightingType
     location: LocationInputOpt!
-    cilLevel: CILLevel
+    cilLevel: Int
   }
 
   # Input types and enums for LightingAssetTimeSeriesData

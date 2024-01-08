@@ -3,7 +3,6 @@ import LightingAsset, {
   LightingType,
   Location,
   PredictiveStatus,
-  CILLevel,
 } from './LightingAsset';
 import LightingAssetTimeSeriesData from './LightingAssetTimeSeriesData';
 import WorkOrder, { WorkOrderStatus } from './WorkOrder';
@@ -20,5 +19,4 @@ export {
   LightingType,
   PredictiveStatus,
   Location,
-  CILLevel,
 };

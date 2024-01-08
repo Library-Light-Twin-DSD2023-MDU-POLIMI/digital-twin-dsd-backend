@@ -24,11 +24,9 @@ export interface ILightingAsset extends Document {
   };
   type: LightingType;
   location: Location;
-  cilLevel: CILLevel;
+  cilLevel: 1 | 2;
   workOrders: IWorkOrder['_id'][];
 }
-
-export type CILLevel = 'I' | 'II';
 
 const lightingAssetSchema = new Schema<ILightingAsset>({
   uid: { type: String, required: true, unique: true },
