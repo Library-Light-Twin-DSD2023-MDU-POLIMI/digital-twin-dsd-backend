@@ -35,32 +35,33 @@ const resolvers = {
       args: { input: ISortAndPaginate; filter: ILightingAssetFilter }
     ) {
       // Start with a basic query
-      let query = args.input.searchText
-        ? LightingAsset.find({ 'location.area': args.input.searchText })
-        : LightingAsset.find();
+      const queryJson: any = {};
 
       // Apply filters
       if (args.filter) {
-        if (args.filter.floor) {
-          query = query.where('location.floor').equals(args.filter.floor);
-        }
-        if (args.filter.section) {
-          query = query.where('location.section').equals(args.filter.section);
+        if (args.filter.location) {
+          if (args.filter.location.floor) {
+            queryJson['location.floor'] = args.filter.location.floor;
+          }
+          if (args.filter.location.section) {
+            queryJson['location.section'] = args.filter.location.section;
+          }
+          if (args.filter.location.area) {
+            queryJson['location.area'] = args.filter.location.area;
+          }
         }
         if (args.filter.lightingType) {
-          query = query.where('type').equals(args.filter.lightingType);
+          queryJson['lightingType'] = args.filter.lightingType;
         }
         if (args.filter.currentStatus) {
-          query = query
-            .where('currentStatus')
-            .equals(args.filter.currentStatus);
+          queryJson['currentStatus'] = args.filter.currentStatus;
         }
         if (args.filter.predictedStatus) {
-          query = query
-            .where('predictiveStatus')
-            .equals(args.filter.predictedStatus);
+          queryJson['predictedStatus'] = args.filter.predictedStatus;
         }
       }
+
+      let query = LightingAsset.find(queryJson);
 
       // Apply pagination
       if (args.input) {
