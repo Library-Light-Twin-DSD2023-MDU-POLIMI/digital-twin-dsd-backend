@@ -44,10 +44,10 @@ const typeDefs = `#graphql
   }
 
   input LightingAssetFilter {
-    location: LocationInput
+    location: LocationInputOpt!
     lightingType: LightingType
     currentStatus: CurrentStatus
-    predictedStatus: PredictedStatusTypeInput
+    predictedStatus: PredictiveStatus
   }
 
   #Location
@@ -61,6 +61,12 @@ const typeDefs = `#graphql
     floor: Int!
     section: String!
     area: String!
+  }
+
+  input LocationInputOpt {
+    floor: Int
+    section: String
+    area: String
   }
   #LightingAssetTimeSeriesData
   type LightingAssetTimeSeriesData {
@@ -92,7 +98,6 @@ const typeDefs = `#graphql
 
   input WATTInput {
     value: Float
-    healthStatus: Int
   }
 
   #Illuminance
@@ -141,7 +146,6 @@ const typeDefs = `#graphql
 
   input UGRInput {
     value: Float
-    healthStatus: Int
   }
 
   # ColorRendering
@@ -160,7 +164,6 @@ const typeDefs = `#graphql
 
   input CRIInput {
     value: Float
-    healthStatus: Int
   }
 
   #ColorTemperature
@@ -181,7 +184,6 @@ const typeDefs = `#graphql
 
   input CCTInput {
     value: Float
-    healthStatus: Int
   }
 
   type Duv {
@@ -191,7 +193,6 @@ const typeDefs = `#graphql
 
   input DuvInput {
     value: Float
-    healthStatus: Int
   }
 
   #Flicker
@@ -210,7 +211,6 @@ const typeDefs = `#graphql
 
   input SVMInput {
     value: Float
-    healthStatus: Int
   }
 
   #ColorPreference
@@ -247,7 +247,6 @@ const typeDefs = `#graphql
 
   input PhotobiologicalSafetyUVInput {
     value: Float
-    healthStatus: Int
   }
 
   type LightingAssetAverageData {
@@ -273,7 +272,7 @@ const typeDefs = `#graphql
   type Scale {
     tooHigh: String
     perfect: String
-    good: String
+    good: String!
     mid: String
     tooLow: String
   }
@@ -286,11 +285,11 @@ const typeDefs = `#graphql
     workOrderType: WorkOrderType!
     workOrderStatus: WorkOrderStatus!
     description: String!
-    comment: String
+    comment: String!
     location: Location!
     dateOfMaintenance: String!
-    executionStartDate: String
-    executedDate: String
+    executionStartDate: String!
+    executedDate: String!
   }
 
   enum WorkOrderType {
@@ -314,6 +313,7 @@ const typeDefs = `#graphql
     currentStatus: CurrentStatus!
     predictiveStatus: PredictedStatusTypeInput
     type: LightingType!
+    cilLevel: Int
     location: LocationInput!
   }
 
@@ -321,7 +321,9 @@ const typeDefs = `#graphql
     uid: String!
     currentStatus: CurrentStatus
     predictiveStatus: PredictedStatusTypeInput
-    location: LocationInput
+    type: LightingType
+    location: LocationInputOpt!
+    cilLevel: Int
   }
 
   # Input types and enums for LightingAssetTimeSeriesData
@@ -362,8 +364,16 @@ const typeDefs = `#graphql
 
   # Input types and enums for MetricMetaData
 
-  input MetricMetaDataInput {
+  input AddMetricMetaDataInput {
     metric: String!
+    unit: String
+    scale: ScaleInput!
+    information: String
+    tooltipSummary: String
+  }
+
+  input UpdateMetricMetaDataInput {
+    metric: String
     unit: String
     scale: ScaleInput
     information: String
@@ -373,7 +383,7 @@ const typeDefs = `#graphql
   input ScaleInput {
     tooHigh: String
     perfect: String
-    good: String
+    good: String!
     mid: String
     tooLow: String
   }
@@ -400,7 +410,7 @@ const typeDefs = `#graphql
     workOrderStatus: WorkOrderStatus
     description: String
     comment: String
-    location: LocationInput
+    location: LocationInputOpt!
     dateOfMaintenance: String
     excecutionStartDate: String
     excecutedDate: String
@@ -436,12 +446,12 @@ const typeDefs = `#graphql
     addLightingAssetMeasurements(
       inputs: [LightingAssetMeasurementInput!]!
     ): [LightingAssetTimeSeriesData]
-    addMetric(input: MetricMetaDataInput): Metric
-    updateMetric(id: ID!, input: MetricMetaDataInput): Metric
-    removeMetric(id: ID!): Metric
+    addMetric(input: AddMetricMetaDataInput): Metric
+    updateMetric(id: ID!, input: UpdateMetricMetaDataInput): Metric
+    removeMetric(id: ID!): Boolean
     addWorkOrder(input: AddWorkOrderInput!): WorkOrder
-    removeWorkOrder(id: ID!): Boolean
     updateWorkOrder(id: ID!, input: UpdateWorkOrderInput!): WorkOrder
+    removeWorkOrder(id: ID!): Boolean
   }
 `;
 

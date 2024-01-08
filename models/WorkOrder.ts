@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { ILightingAsset } from './LightingAsset';
-import { Location } from './LightingAsset';
+import { ILightingAsset, Location } from './LightingAsset';
+
 export type WorkOrderStatus = 'SCHEDULED' | 'COMPLETED' | 'NOTCOMPLETED';
 export type WorkOrderType = 'CM' | 'PM' | 'PDM'; // New type for work order types
 
