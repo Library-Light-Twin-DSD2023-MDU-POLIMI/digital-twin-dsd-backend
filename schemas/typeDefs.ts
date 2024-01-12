@@ -1,5 +1,4 @@
-import { gql } from 'apollo-server-lambda';
-const typeDefs = gql`
+const typeDefs = `#graphql
   #LightingAsset
   type LightingAsset {
     _id: ID!
@@ -45,10 +44,10 @@ const typeDefs = gql`
   }
 
   input LightingAssetFilter {
-    location: LocationInput
+    location: LocationInputOpt!
     lightingType: LightingType
     currentStatus: CurrentStatus
-    predictedStatus: PredictedStatusTypeInput
+    predictedStatus: PredictiveStatus
   }
 
   #Location
@@ -62,6 +61,12 @@ const typeDefs = gql`
     floor: Int!
     section: String!
     area: String!
+  }
+
+  input LocationInputOpt {
+    floor: Int
+    section: String
+    area: String
   }
   #LightingAssetTimeSeriesData
   type LightingAssetTimeSeriesData {
@@ -93,7 +98,6 @@ const typeDefs = gql`
 
   input WATTInput {
     value: Float
-    healthStatus: Int
   }
 
   #Illuminance
@@ -142,7 +146,6 @@ const typeDefs = gql`
 
   input UGRInput {
     value: Float
-    healthStatus: Int
   }
 
   # ColorRendering
@@ -161,7 +164,6 @@ const typeDefs = gql`
 
   input CRIInput {
     value: Float
-    healthStatus: Int
   }
 
   #ColorTemperature
@@ -182,7 +184,6 @@ const typeDefs = gql`
 
   input CCTInput {
     value: Float
-    healthStatus: Int
   }
 
   type Duv {
@@ -192,7 +193,6 @@ const typeDefs = gql`
 
   input DuvInput {
     value: Float
-    healthStatus: Int
   }
 
   #Flicker
@@ -211,7 +211,6 @@ const typeDefs = gql`
 
   input SVMInput {
     value: Float
-    healthStatus: Int
   }
 
   #ColorPreference
@@ -248,7 +247,6 @@ const typeDefs = gql`
 
   input PhotobiologicalSafetyUVInput {
     value: Float
-    healthStatus: Int
   }
 
   type LightingAssetAverageData {
@@ -274,7 +272,7 @@ const typeDefs = gql`
   type Scale {
     tooHigh: String
     perfect: String
-    good: String
+    good: String!
     mid: String
     tooLow: String
   }
@@ -284,14 +282,14 @@ const typeDefs = gql`
     _id: ID!
     workOrderID: String!
     lightingAssetID: ID!
-    type: WorkOrderType!
+    workOrderType: WorkOrderType!
     workOrderStatus: WorkOrderStatus!
     description: String!
-    comment: String
+    comment: String!
     location: Location!
     dateOfMaintenance: String!
-    executionStartDate: String
-    executedDate: String
+    executionStartDate: String!
+    executedDate: String!
   }
 
   enum WorkOrderType {
@@ -315,6 +313,7 @@ const typeDefs = gql`
     currentStatus: CurrentStatus!
     predictiveStatus: PredictedStatusTypeInput
     type: LightingType!
+    cilLevel: Int
     location: LocationInput!
   }
 
@@ -322,7 +321,9 @@ const typeDefs = gql`
     uid: String!
     currentStatus: CurrentStatus
     predictiveStatus: PredictedStatusTypeInput
-    location: LocationInput
+    type: LightingType
+    location: LocationInputOpt!
+    cilLevel: Int
   }
 
   # Input types and enums for LightingAssetTimeSeriesData
@@ -363,8 +364,16 @@ const typeDefs = gql`
 
   # Input types and enums for MetricMetaData
 
-  input MetricMetaDataInput {
+  input AddMetricMetaDataInput {
     metric: String!
+    unit: String
+    scale: ScaleInput!
+    information: String
+    tooltipSummary: String
+  }
+
+  input UpdateMetricMetaDataInput {
+    metric: String
     unit: String
     scale: ScaleInput
     information: String
@@ -374,7 +383,7 @@ const typeDefs = gql`
   input ScaleInput {
     tooHigh: String
     perfect: String
-    good: String
+    good: String!
     mid: String
     tooLow: String
   }
@@ -384,7 +393,7 @@ const typeDefs = gql`
   input AddWorkOrderInput {
     workOrderID: String!
     lightingAssetID: ID!
-    type: WorkOrderType!
+    workOrderType: WorkOrderType!
     workOrderStatus: WorkOrderStatus!
     description: String!
     comment: String
@@ -395,13 +404,13 @@ const typeDefs = gql`
   }
 
   input UpdateWorkOrderInput {
-    workOrderID: String
-    lightingAssetID: ID
-    type: WorkOrderType
+    workOrderID: String!
+    lightingAssetID: ID!
+    workOrderType: WorkOrderType
     workOrderStatus: WorkOrderStatus
     description: String
     comment: String
-    location: LocationInput
+    location: LocationInputOpt!
     dateOfMaintenance: String
     excecutionStartDate: String
     excecutedDate: String
@@ -434,15 +443,15 @@ const typeDefs = gql`
     addLightingAsset(input: AddLightingAssetInput): LightingAsset
     updateLightingAsset(id: ID!, input: UpdateLightingAssetInput): LightingAsset
     removeLightingAsset(id: ID!): Boolean
-    addWorkOrder(input: AddWorkOrderInput!): WorkOrder
-    removeWorkOrder(id: ID!): Boolean
-    updateWorkOrder(id: ID!, input: UpdateWorkOrderInput!): WorkOrder
     addLightingAssetMeasurements(
       inputs: [LightingAssetMeasurementInput!]!
     ): [LightingAssetTimeSeriesData]
-    addMetric(input: MetricMetaDataInput): Metric
-    updateMetric(id: ID!, input: MetricMetaDataInput): Metric
-    removeMetric(id: ID!): Metric
+    addMetric(input: AddMetricMetaDataInput): Metric
+    updateMetric(id: ID!, input: UpdateMetricMetaDataInput): Metric
+    removeMetric(id: ID!): Boolean
+    addWorkOrder(input: AddWorkOrderInput!): WorkOrder
+    updateWorkOrder(id: ID!, input: UpdateWorkOrderInput!): WorkOrder
+    removeWorkOrder(id: ID!): Boolean
   }
 `;
 

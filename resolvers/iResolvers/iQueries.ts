@@ -2,7 +2,7 @@ import {
   CurrentStatus,
   LightingType,
   PredictiveStatus,
-} from "../../models/index";
+} from '../../models/index';
 
 export interface ISortAndPaginate {
   limit: number;
@@ -11,9 +11,11 @@ export interface ISortAndPaginate {
 }
 
 export interface ILightingAssetFilter {
-  floor?: number;
-  section?: string;
-  area?: string;
+  location: {
+    floor?: number;
+    section?: string;
+    area?: string;
+  };
   lightingType?: LightingType;
   currentStatus?: CurrentStatus;
   predictedStatus?: PredictiveStatus;
@@ -22,6 +24,6 @@ export interface ILightingAssetFilter {
 export interface ITimeSeriesDataThresholds {
   [key: string]: {
     thresholdValue: number;
-    comparison: "LESS" | "MORE" | "EQUAL";
+    comparison: 'LESS' | 'MORE' | 'EQUAL';
   };
 }

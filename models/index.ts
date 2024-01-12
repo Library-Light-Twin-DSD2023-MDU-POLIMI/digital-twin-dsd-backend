@@ -3,9 +3,9 @@ import LightingAsset, {
   LightingType,
   Location,
   PredictiveStatus,
-} from "./LightingAsset";
-import LightingAssetTimeSeriesData from "./LightingAssetTimeSeriesData";
-import WorkOrder, { WorkOrderStatus } from "./WorkOrder";
+} from './LightingAsset';
+import LightingAssetTimeSeriesData from './LightingAssetTimeSeriesData';
+import WorkOrder, { WorkOrderStatus } from './WorkOrder';
 
 // FIXME the digital-twin-api should work via a series of function to
 // interact with the outside world. This use is a placeholder, and any

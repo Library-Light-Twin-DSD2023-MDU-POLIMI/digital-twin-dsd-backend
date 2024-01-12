@@ -16,11 +16,7 @@ export interface IAddLightingAssetInput {
   };
   type: LightingType;
   cilLevel: 1 | 2;
-  location: {
-    floor: number;
-    section: string;
-    area: string;
-  };
+  location: Location;
 }
 
 export interface IUpdateLightingAssetInput {
@@ -31,11 +27,7 @@ export interface IUpdateLightingAssetInput {
     predictedTime: Date;
   };
   type?: LightingType;
-  location?: {
-    floor: number;
-    section: string;
-    area: string;
-  };
+  location?: Location;
   cilLevel?: 1 | 2;
 }
 
@@ -44,6 +36,8 @@ export interface ILightingAssetMeasurementInput {
   timestamp: string;
   power?: {
     WATT?: { value: number };
+    // this makes sense for it to be a different type than in LightingAssetTimeSeriesData.ts
+    // since this is an input, and not output type (healthStatus is excluded in here because those are read only)
   };
   illuminance?: {
     maintainedAverage?: { value: number };
@@ -102,17 +96,18 @@ export interface IAddWorkOrderInput {
   workOrderID: string;
   lightingAssetID: string;
   workOrderStatus: WorkOrderStatus;
+  workOrderType: WorkOrderType;
   description: string;
   comment?: string;
   location: Location;
   dateOfMaintenance: Date;
-  executionStartDate: Date;
-  executedDate: Date;
+  executionStartDate?: Date;
+  executedDate?: Date;
 }
 export interface IUpdateWorkOrderInput {
-  workOrderID: string;
-  lightingAssetID: string;
-  type?: WorkOrderType;
+  workOrderID?: string;
+  lightingAssetID?: string;
+  workOrderType?: WorkOrderType;
   workOrderStatus?: WorkOrderStatus;
   description?: string;
   comment?: string;

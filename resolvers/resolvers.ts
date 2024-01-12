@@ -35,32 +35,33 @@ const resolvers = {
       args: { input: ISortAndPaginate; filter: ILightingAssetFilter }
     ) {
       // Start with a basic query
-      let query = args.input.searchText
-        ? LightingAsset.find({ 'location.area': args.input.searchText })
-        : LightingAsset.find();
+      const queryJson: { [key: string]: any } = {};
 
       // Apply filters
       if (args.filter) {
-        if (args.filter.floor) {
-          query = query.where('location.floor').equals(args.filter.floor);
-        }
-        if (args.filter.section) {
-          query = query.where('location.section').equals(args.filter.section);
+        if (args.filter.location) {
+          if (args.filter.location.floor) {
+            queryJson['location.floor'] = args.filter.location.floor;
+          }
+          if (args.filter.location.section) {
+            queryJson['location.section'] = args.filter.location.section;
+          }
+          if (args.filter.location.area) {
+            queryJson['location.area'] = args.filter.location.area;
+          }
         }
         if (args.filter.lightingType) {
-          query = query.where('type').equals(args.filter.lightingType);
+          queryJson['lightingType'] = args.filter.lightingType;
         }
         if (args.filter.currentStatus) {
-          query = query
-            .where('currentStatus')
-            .equals(args.filter.currentStatus);
+          queryJson['currentStatus'] = args.filter.currentStatus;
         }
         if (args.filter.predictedStatus) {
-          query = query
-            .where('predictiveStatus')
-            .equals(args.filter.predictedStatus);
+          queryJson['predictedStatus'] = args.filter.predictedStatus;
         }
       }
+
+      let query = LightingAsset.find(queryJson);
 
       // Apply pagination
       if (args.input) {
@@ -127,7 +128,37 @@ const resolvers = {
       const startDate = new Date(startTime);
       const endDate = new Date(endTime);
 
-      // Aggregation pipeline
+      // Aggregation pipeline for debugging
+      const debugPipeline = [
+        {
+          $match: {
+            'metaData.assetId': new mongoose.Types.ObjectId(assetId),
+            timestamp: { $gte: startDate, $lte: endDate },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            timestamp: 1,
+            illuminance: 1,
+            glare: 1,
+            colorRendering: 1,
+            colorTemperature: 1,
+            flicker: 1,
+            colorPreference: 1,
+            photobiologicalSafety: 1,
+            // Include other fields as needed for debugging
+          },
+        },
+      ];
+
+      // Execute the debugging pipeline
+      const debugResult = await LightingAssetTimeSeriesData.aggregate(
+        debugPipeline
+      );
+      console.log('Debugging Matched Documents:', debugResult);
+
+      // Original aggregation pipeline
       const pipeline = [
         {
           $match: {
@@ -141,14 +172,16 @@ const resolvers = {
               day: { $dayOfYear: '$timestamp' },
               year: { $year: '$timestamp' },
             },
-            averageIlluminance: { $avg: '$illuminance.maintainedAverage' },
-            averageGlare: { $avg: '$glare.UGR' },
-            averageColorRendering: { $avg: '$colorRendering.CRI' },
-            averageColorTemperature: { $avg: '$colorTemperature.CCT' },
-            averageFlicker: { $avg: '$flicker.SVM' },
-            averageColorPreference: { $avg: '$colorPreference.PVF' },
+            averageIlluminance: {
+              $avg: '$illuminance.maintainedAverage.value',
+            },
+            averageGlare: { $avg: '$glare.UGR.value' },
+            averageColorRendering: { $avg: '$colorRendering.CRI.value' },
+            averageColorTemperature: { $avg: '$colorTemperature.CCT.value' },
+            averageFlicker: { $avg: '$flicker.SVM.value' },
+            averageColorPreference: { $avg: '$colorPreference.PVF.value' },
             averagePhotobiologicalSafety: {
-              $avg: '$photobiologicalSafety.UV',
+              $avg: '$photobiologicalSafety.UV.value',
             },
           },
         },
@@ -173,7 +206,7 @@ const resolvers = {
         },
       ];
 
-      // Execute the aggregation pipeline
+      // Execute the original aggregation pipeline
       const result = await LightingAssetTimeSeriesData.aggregate(pipeline);
 
       // Format the result to match the GraphQL type 'LightingAssetAverageData'
@@ -188,6 +221,7 @@ const resolvers = {
         averagePhotobiologicalSafety: item.averagePhotobiologicalSafety,
       }));
     },
+
     async metrics() {
       return await MetricMetaData.find();
     },
@@ -199,7 +233,7 @@ const resolvers = {
       return await WorkOrder.findById(ID);
     },
 
-    async workOrders(_: unknown) {
+    async workOrders() {
       return await WorkOrder.find();
     },
   },
@@ -230,7 +264,7 @@ const resolvers = {
     ) {
       try {
         // Prepare the update object
-        let updateObj: { [key: string]: any } = {};
+        const updateObj: { [key: string]: any } = {};
 
         // Handle top-level fields except for nested objects
         for (const [key, value] of Object.entries(args.input)) {
@@ -285,11 +319,41 @@ const resolvers = {
       try {
         const newLightingAssetMeasurements = args.input.map(measurement => {
           const { assetId, timestamp, ...otherMeasurements } = measurement;
+
+          // Define a type for the relevant keys in otherMeasurements
+          type RelevantKeys = Omit<
+            ILightingAssetMeasurementInput,
+            'assetId' | 'timestamp'
+          >;
+
+          // Function to add healthStatus to each measurement
+          const addHealthStatus = (measurementData: any) => {
+            const updatedData: any = {};
+            for (const key in measurementData) {
+              updatedData[key] = {
+                ...measurementData[key],
+                healthStatus: 4, // Static value for healthStatus
+              };
+            }
+            return updatedData;
+          };
+
+          // Iterate over otherMeasurements and add healthStatus
+          for (const category in otherMeasurements) {
+            if (category in otherMeasurements) {
+              const categoryKey = category as keyof RelevantKeys;
+              if (otherMeasurements[categoryKey]) {
+                otherMeasurements[categoryKey] = addHealthStatus(
+                  otherMeasurements[categoryKey]
+                );
+              }
+            }
+          }
+
           return {
             metaData: {
               assetId: new mongoose.Types.ObjectId(assetId),
             },
-
             timestamp: new Date(timestamp),
             ...otherMeasurements,
           };
@@ -301,12 +365,12 @@ const resolvers = {
           );
         return lightingAssetTimeSeriesData;
       } catch (error) {
+        console.error('Error in addLightingAssetMeasurements resolver:', error);
         throw new GraphQLError(
-          'Was not able to add new lighting asset measurements'
+          'Was not able to add new measurements: ' + error
         );
       }
     },
-
     async addMetric(_: unknown, args: { input: IAddMetricMetaData }) {
       // Check if the metric already exists
       try {
@@ -327,13 +391,13 @@ const resolvers = {
       }
     },
 
-    updateMetric: async (
+    async updateMetric(
       _: unknown,
       args: { ID: string; input: IUpdateMetricMetaData }
-    ) => {
+    ) {
       try {
         // Define the type for updateObj
-        let updateObj: { [key: string]: any } = {};
+        const updateObj: { [key: string]: any } = {};
 
         // Handle top-level fields except 'scale'
         for (const [key, value] of Object.entries(args.input)) {
@@ -378,24 +442,29 @@ const resolvers = {
 
     async addWorkOrder(_: unknown, args: { input: IAddWorkOrderInput }) {
       try {
-        // Create and save the new WorkOrder
-        const newWorkOrder = new WorkOrder(args.input);
-        const savedWorkOrder = await newWorkOrder.save();
-
-        // If the WorkOrder has a lightingAssetID, update the corresponding LightingAsset
-        if (savedWorkOrder.lightingAssetID) {
-          await LightingAsset.findByIdAndUpdate(
-            savedWorkOrder.lightingAssetID,
-            { $addToSet: { workOrders: savedWorkOrder._id } }
-          );
+        // Check if the corresponding LightingAsset exists
+        const lightingAsset = await LightingAsset.findById(
+          args.input.lightingAssetID
+        );
+        if (!lightingAsset) {
+          throw new Error('LightingAsset not found');
         }
+
+        // Create and save the new WorkOrder
+        const newWorkOrder = new WorkOrder({
+          ...args.input,
+        });
+        const savedWorkOrder = await newWorkOrder.save();
+        // Update the corresponding LightingAsset
+        await LightingAsset.findByIdAndUpdate(savedWorkOrder.lightingAssetID, {
+          $addToSet: { workOrders: savedWorkOrder._id },
+        });
 
         return savedWorkOrder;
       } catch (error) {
-        throw new GraphQLError('Was not able to add a new work order');
+        throw new GraphQLError('Was not able to add a new work order' + error);
       }
     },
-
     async updateWorkOrder(
       _: unknown,
       args: { ID: string; input: IUpdateWorkOrderInput }
@@ -412,9 +481,26 @@ const resolvers = {
           }
         }
 
+        // Define the type for updateObj
+        const updateObj: { [key: string]: unknown } = {};
+
+        // Handle top-level fields except 'location'
+        for (const [key, value] of Object.entries(args.input)) {
+          if (key !== 'location') {
+            updateObj[key] = value;
+          }
+        }
+
+        // Handle nested 'location' fields
+        if (args.input.location) {
+          for (const [key, value] of Object.entries(args.input.location)) {
+            updateObj[`location.${key}`] = value; // Update nested fields using dot notation
+          }
+        }
+
         const updatedWorkOrder = await WorkOrder.findByIdAndUpdate(
           args.ID,
-          args.input,
+          { $set: updateObj }, // Use $set to update fields
           { new: true }
         );
 
@@ -422,24 +508,14 @@ const resolvers = {
           throw new GraphQLError('WorkOrder not found');
         }
 
-        if (args.input.lightingAssetID) {
-          // Remove WorkOrder ID from the old LightingAsset
-          await LightingAsset.updateOne(
-            { workOrders: args.ID },
-            { $pull: { workOrders: args.ID } }
-          );
+        // Existing logic for handling lightingAssetID updates
+        // ...
 
-          // Add WorkOrder ID to the new LightingAsset
-          await LightingAsset.findByIdAndUpdate(args.input.lightingAssetID, {
-            $addToSet: { workOrders: args.ID },
-          });
-        }
         return updatedWorkOrder;
       } catch (error) {
         throw new GraphQLError('Was not able to update work order');
       }
     },
-
     async removeWorkOrder(_: unknown, { ID }: { ID: string }) {
       try {
         const result = (await WorkOrder.deleteOne({ _id: ID })).deletedCount;
