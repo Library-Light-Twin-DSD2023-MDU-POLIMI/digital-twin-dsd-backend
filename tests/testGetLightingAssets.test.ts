@@ -88,7 +88,7 @@ describe('lightingAssets Resolver', () => {
       // Define the arguments for the resolver
       const args = {
           input: { limit: 10, offset: 0 },
-          filter: {floor: 5, section: 'North Wing'}
+          filter: {location: {floor: 5, section: 'North Wing'} }
       };   
 
       // Call the resolver

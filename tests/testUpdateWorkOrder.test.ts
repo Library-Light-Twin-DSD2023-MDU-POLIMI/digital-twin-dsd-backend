@@ -8,7 +8,7 @@ import {
 } from '../resolvers/iResolvers/iMutations';
 
 describe('updateWorkOrder Resolver', () => {
-  let lightingAssetId: string = '';
+  let lightingAssetId = '';
 
   beforeAll(async () => {
     const connectionString =

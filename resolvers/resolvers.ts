@@ -35,7 +35,7 @@ const resolvers = {
       args: { input: ISortAndPaginate; filter: ILightingAssetFilter }
     ) {
       // Start with a basic query
-      const queryJson: any = {};
+      const queryJson: { [key: string]: any } = {};
 
       // Apply filters
       if (args.filter) {

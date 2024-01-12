@@ -95,7 +95,6 @@ export interface IUpdateMetricMetaData {
 export interface IAddWorkOrderInput {
   workOrderID: string;
   lightingAssetID: string;
-  type: WorkOrderType;
   workOrderStatus: WorkOrderStatus;
   workOrderType: WorkOrderType;
   description: string;
