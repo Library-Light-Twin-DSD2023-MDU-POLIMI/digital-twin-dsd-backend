@@ -24,7 +24,7 @@ describe('getLightingAssetTimeSeriesData Resolver', () => {
   beforeAll(async () => {
     const connectionString =
       'mongodb+srv://application:lol@dsd.iaano1k.mongodb.net/';
-      await mongoose.connect(connectionString, {});
+    await mongoose.connect(connectionString, {});
   });
 
   afterAll(async () => {
@@ -32,19 +32,22 @@ describe('getLightingAssetTimeSeriesData Resolver', () => {
   });
 
   test('should retrieve time series data for a lighting asset', async () => {
-
     const assetId = 'YOUR_ASSET_ID';
     const startTime = '2023-01-01T00:00:00Z';
     const endTime = '2023-12-31T23:59:59Z';
-    const thresholds = { //add threshods
+    const thresholds = {
+      //add threshods
     };
 
-    const dataResult = await resolvers.Query.getLightingAssetTimeSeriesData(null, {
-      assetId,
-      startTime,
-      endTime,
-      thresholds,
-    });
+    const dataResult = await resolvers.Query.getLightingAssetTimeSeriesData(
+      null,
+      {
+        assetId,
+        startTime,
+        endTime,
+        thresholds,
+      }
+    );
 
     expect(dataResult).toBeDefined();
     expect(Array.isArray(dataResult)).toBe(true);
